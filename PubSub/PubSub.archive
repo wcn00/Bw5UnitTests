@@ -10,7 +10,7 @@
             <authorProperty>wcn00</authorProperty>
             <processProperty>/Processes/Servicedispatch/Dispatcher.process,/Processes/PubSubPlain/Responder.process,/Processes/PubSubConfirm/Responder.process,/Processes/PutGet/Discrete/PutGetResponder.process,/Processes/PutGet/Cached/PutGetResponder.process,/Processes/ReqReply/Responder.process</processProperty>
         </processArchive>
-        <versionProperty>11</versionProperty>
+        <versionProperty>12</versionProperty>
         <authorProperty>wcn00</authorProperty>
         <addServiceSettableGvars>true</addServiceSettableGvars>
         <name>PubSub</name>

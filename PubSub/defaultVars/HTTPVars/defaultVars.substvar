@@ -17,5 +17,13 @@
 			<type>Integer</type>
 			<modTime>1601044323179</modTime>
 		</globalVariable>
+		<globalVariable>
+			<name>port2</name>
+			<value>8100</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>true</serviceSettable>
+			<type>Integer</type>
+			<modTime>1601066873354</modTime>
+		</globalVariable>
 	</globalVariables>
 </repository>

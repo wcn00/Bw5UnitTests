@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>Processes/Multimessage/Logical/PutGet.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>854</pd:endX>
+    <pd:endY>75</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1601066441737</pd:targetNamespace>
+    <pd:activity name="PugLogical10">
+        <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+        <pd:x>347</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <lastSegment>false</lastSegment>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_DATAGRAM</messagetype>
+            <expiration>0</expiration>
+            <priority>0</priority>
+            <reportCoaOptions>None</reportCoaOptions>
+            <reportCodOptions>None</reportCodOptions>
+            <reportExceptionOptions>None</reportExceptionOptions>
+            <reportExpiryOptions>None</reportExpiryOptions>
+            <multiMessage>BatchGroup</multiMessage>
+            <segmentedMaxSize>0</segmentedMaxSize>
+            <asyncPut>false</asyncPut>
+            <passContext>all</passContext>
+            <clusterloadbalance>false</clusterloadbalance>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <destination>bwmq_logical</destination>
+            <gencorrid>true</gencorrid>
+        </config>
+        <pd:inputBindings>
+            <Batch>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                    </text>
+                </InteractionInput>
+            </Batch>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GetLogical10">
+        <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+        <pd:x>612</pd:x>
+        <pd:y>73</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+            <threadpool>1</threadpool>
+            <closeOptions>none</closeOptions>
+            <waitforever>false</waitforever>
+            <multiMessage>BatchGroup</multiMessage>
+            <completeMessage>true</completeMessage>
+            <getOrdered>true</getOrdered>
+            <explicitSync>true</explicitSync>
+            <batchquantity>1</batchquantity>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <destination>bwmq_logical</destination>
+            <gettimeout>100</gettimeout>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>PugLogical10</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>PugLogical10</pd:from>
+        <pd:to>GetLogical10</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetLogical10</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
