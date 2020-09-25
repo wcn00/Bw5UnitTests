@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003">
+    <pd:name>Processes/PutGet/Discrete/PutGetResponder.process</pd:name>
+    <pd:startName>PutGetResponder</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="PutGetResponder">
+        <pd:type>com.tibco.plugin.bwmq.QueueListenerActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.QueueListenerResource</pd:resourceType>
+        <pd:x>134</pd:x>
+        <pd:y>115</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <pollingtimeout>1000</pollingtimeout>
+            <pollinginterval>1000</pollinginterval>
+            <listenerinstances>2</listenerinstances>
+            <contentType>Text</contentType>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <filterEncoding>Text</filterEncoding>
+            <desttype>QUEUE</desttype>
+            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+            <failifquiesce>true</failifquiesce>
+            <enablepolling>false</enablepolling>
+            <dynamic>false</dynamic>
+            <reconnectioninterval>10000</reconnectioninterval>
+            <segmentedMessage>false</segmentedMessage>
+            <clientconfirm>false</clientconfirm>
+            <batchquantity>1</batchquantity>
+            <multiMessage>None</multiMessage>
+            <enablePoisonMsgDetection>false</enablePoisonMsgDetection>
+            <PoisonMsgThreshold>1</PoisonMsgThreshold>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <destination>putgetrequest</destination>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>670</pd:endX>
+    <pd:endY>145</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1601053806762</pd:targetNamespace>
+    <pd:activity name="IBM MQ Put Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+        <pd:x>402</pd:x>
+        <pd:y>132</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <lastSegment>false</lastSegment>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_DATAGRAM</messagetype>
+            <expiration>%%MQVars/msgage%%</expiration>
+            <priority>0</priority>
+            <reportCoaOptions>None</reportCoaOptions>
+            <reportCodOptions>None</reportCodOptions>
+            <reportExceptionOptions>None</reportExceptionOptions>
+            <reportExpiryOptions>None</reportExpiryOptions>
+            <multiMessage>None</multiMessage>
+            <segmentedMaxSize>0</segmentedMaxSize>
+            <asyncPut>false</asyncPut>
+            <passContext>all</passContext>
+            <clusterloadbalance>false</clusterloadbalance>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91pooled.mqcon</connectionresource>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <mqproperties>
+                    <xsl:if test="$PutGetResponder/InteractionOutput/mqproperties/replyToQueueName">
+                        <destination>
+                            <xsl:value-of select="$PutGetResponder/InteractionOutput/mqproperties/replyToQueueName"/>
+                        </destination>
+                    </xsl:if>
+                    <xsl:if test="$PutGetResponder/InteractionOutput/mqproperties/correlationId">
+                        <correlationId>
+                            <xsl:value-of select="$PutGetResponder/InteractionOutput/mqproperties/correlationId"/>
+                        </correlationId>
+                    </xsl:if>
+                </mqproperties>
+                <text>
+                    <xsl:value-of select="$PutGetResponder/InteractionOutput/text"/>
+                </text>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>PutGetResponder</pd:from>
+        <pd:to>IBM MQ Put Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Put Activity</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

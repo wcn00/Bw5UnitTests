@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:ns2="www.tibco.com/plugin/Sleep">
+    <pd:name>Processes/PubSubConfirm/Responder.process</pd:name>
+    <pd:startName>SubscribConfirm</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="SubscribConfirm">
+        <pd:type>com.tibco.plugin.bwmq.TopicSubscriberActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.TopicSubscriberResource</pd:resourceType>
+        <pd:x>118</pd:x>
+        <pd:y>73</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <pollingtimeout>1000</pollingtimeout>
+            <pollinginterval>1000</pollinginterval>
+            <listenerinstances>1</listenerinstances>
+            <contentType>Text</contentType>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <filterEncoding>Text</filterEncoding>
+            <enablepolling>false</enablepolling>
+            <failifquiesce>true</failifquiesce>
+            <desttype>TOPIC</desttype>
+            <newpubsonly>true</newpubsonly>
+            <durablesubscription>false</durablesubscription>
+            <reconnectioninterval>10000</reconnectioninterval>
+            <wildcardscheme>TOPIC</wildcardscheme>
+            <connectionresource>/Resources/centosmq91pooled.mqcon</connectionresource>
+            <destination>wcn.unit.test.topic</destination>
+            <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
+            <topicdynamic>confirm</topicdynamic>
+            <clientconfirm>true</clientconfirm>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>688</pd:endX>
+    <pd:endY>75</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1601043482242</pd:targetNamespace>
+    <pd:activity name="Notify">
+        <pd:type>com.tibco.plugin.waitnotify.NotifyActivity</pd:type>
+        <pd:resourceType>ae.activities.notifyActivity</pd:resourceType>
+        <pd:x>566</pd:x>
+        <pd:y>83</pd:y>
+        <config>
+            <sharedConfig>/Resources/MQNotify.sharednotify</sharedConfig>
+        </config>
+        <pd:inputBindings>
+            <input>
+                <xsl:if test="$SubscribConfirm/InteractionOutput/appProperties/key">
+                    <key>
+                        <xsl:value-of select="$SubscribConfirm/InteractionOutput/appProperties/key"/>
+                    </key>
+                </xsl:if>
+                <timeout>
+                    <xsl:value-of select="3000"/>
+                </timeout>
+                <ns:HttpProps>
+                    <ns:resp>
+                        <xsl:value-of select="$SubscribConfirm/InteractionOutput/text"/>
+                    </ns:resp>
+                </ns:HttpProps>
+            </input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Confirm">
+        <pd:type>com.tibco.pe.core.ConfirmActivity</pd:type>
+        <pd:resourceType>activity.confirm</pd:resourceType>
+        <pd:x>454</pd:x>
+        <pd:y>82</pd:y>
+        <config>
+            <ConfirmEvent>SubscribConfirm</ConfirmEvent>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Sleep">
+        <pd:type>com.tibco.plugin.timer.SleepActivity</pd:type>
+        <pd:resourceType>ae.activities.sleep</pd:resourceType>
+        <pd:x>305</pd:x>
+        <pd:y>87</pd:y>
+        <config/>
+        <pd:inputBindings>
+            <ns2:SleepInputSchema>
+                <IntervalInMillisec>
+                    <xsl:value-of select="500"/>
+                </IntervalInMillisec>
+            </ns2:SleepInputSchema>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>SubscribConfirm</pd:from>
+        <pd:to>Sleep</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Notify</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Confirm</pd:from>
+        <pd:to>Notify</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Sleep</pd:from>
+        <pd:to>Confirm</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

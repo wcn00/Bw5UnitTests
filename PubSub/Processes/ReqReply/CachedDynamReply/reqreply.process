@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <pd:name>Processes/ReqReply/CachedDynamReply/reqreply.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <xsl:if test="$IBM-MQ-Request-Reply-Activity/InteractionOutput/text">
+                <pfx:resp>
+                    <xsl:value-of select="$IBM-MQ-Request-Reply-Activity/InteractionOutput/text"/>
+                </pfx:resp>
+            </xsl:if>
+        </pfx:HttpProps>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
+    <pd:endX>688</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1601055361309</pd:targetNamespace>
+    <pd:activity name="IBM MQ Request Reply Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqReqReplyActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqReqReplyActivity</pd:resourceType>
+        <pd:x>376</pd:x>
+        <pd:y>72</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_REQUEST</messagetype>
+            <expiration>0</expiration>
+            <priority>0</priority>
+            <mqcih_enabled>false</mqcih_enabled>
+            <mqiih_enabled>false</mqiih_enabled>
+            <passContext>default</passContext>
+            <replypassoption>None</replypassoption>
+            <replymatchoption>CorrelationId</replymatchoption>
+            <poolacitivity>true</poolacitivity>
+            <connectionresource>/Resources/centosmq91.mqcon</connectionresource>
+            <destination>basicreq</destination>
+            <replytodestination>basicreply</replytodestination>
+            <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
+            <dynamicreply>true</dynamicreply>
+            <dynamictemplatequeue>mq.dynam.reply</dynamictemplatequeue>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <mqproperties>
+                    <waitInterval>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/MQVars/waitinterval"/>
+                    </waitInterval>
+                </mqproperties>
+                <appProperties>
+                    <xsl:if test="$Start/pfx:HttpProps/pfx:iter">
+                        <iter>
+                            <xsl:value-of select="$Start/pfx:HttpProps/pfx:iter"/>
+                        </iter>
+                    </xsl:if>
+                </appProperties>
+                <text>
+                    <xsl:value-of select="$Start/pfx:HttpProps/pfx:req"/>
+                </text>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>IBM MQ Request Reply Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Request Reply Activity</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

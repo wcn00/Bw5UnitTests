@@ -10,6 +10,11 @@
                 <propertytype>string</propertytype>
                 <propertycardinality>optional</propertycardinality>
             </row>
+            <row>
+                <propertyname>iter</propertyname>
+                <propertytype>int</propertytype>
+                <propertycardinality>optional</propertycardinality>
+            </row>
         </properties>
     </config>
 </BWSharedResource>

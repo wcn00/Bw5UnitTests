@@ -9,7 +9,7 @@
         <qmanagerport>1414</qmanagerport>
         <qmanager/>
         <pooled>true</pooled>
-        <qmanageractive>15</qmanageractive>
+        <qmanageractive>%%MQVars/maxcons%%</qmanageractive>
         <qmanagerunused>5</qmanagerunused>
         <qmanagertimeout>10000</qmanagertimeout>
         <tls>false</tls>

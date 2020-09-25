@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>maxcons</name>
+			<value>30</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>true</serviceSettable>
+			<type>Integer</type>
+			<modTime>1601065717324</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>msgage</name>
+			<value>300</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>true</serviceSettable>
+			<type>Integer</type>
+			<modTime>1601065717339</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>waitinterval</name>
+			<value>5000</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>true</serviceSettable>
+			<type>Integer</type>
+			<modTime>1601065807252</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>
