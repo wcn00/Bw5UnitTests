@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="root">
+		<xs:complexType/>
+	</xs:element>
+	<xs:element name="HttpProps">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="op" minOccurs="0"/>
+				<xs:element ref="req" minOccurs="0"/>
+				<xs:element ref="iter" minOccurs="0"/>
+				<xs:element ref="resp" minOccurs="0"/>
+				<xs:element ref="key" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="op" type="xs:string"/>
+	<xs:element name="req" type="xs:string"/>
+	<xs:element name="iter" type="xs:int"/>
+	<xs:element name="resp" type="xs:string"/>
+	<xs:element name="key" type="xs:string"/>
+</xs:schema>

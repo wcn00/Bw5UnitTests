@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BWSharedResource xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd">
+    <import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <name>MQNotify</name>
+    <resourceType>ae.shared.notifySharedConfig</resourceType>
+    <config xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <localOnly>true</localOnly>
+        <xsdString ref="pfx:HttpProps"/>
+    </config>
+</BWSharedResource>

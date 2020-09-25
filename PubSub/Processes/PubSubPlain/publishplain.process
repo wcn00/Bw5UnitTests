@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/EngineTypes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <pd:name>Processes/PubSubPlain/publishplain.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
+    <pd:startX>67</pd:startX>
+    <pd:startY>69</pd:startY>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <xsl:if test="$Wait/pfx:HttpProps/pfx:resp">
+                <pfx:resp>
+                    <xsl:value-of select="$Wait/pfx:HttpProps/pfx:resp"/>
+                </pfx:resp>
+            </xsl:if>
+        </pfx:HttpProps>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
+    <pd:endX>906</pd:endX>
+    <pd:endY>62</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1601044574176</pd:targetNamespace>
+    <pd:activity name="IBM MQ Publish Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqPublishActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqPublishActivity</pd:resourceType>
+        <pd:x>288</pd:x>
+        <pd:y>77</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <contentType>Text</contentType>
+            <desttype>TOPIC</desttype>
+            <messagetype>MQMT_DATAGRAM</messagetype>
+            <None>None</None>
+            <gencorrid>false</gencorrid>
+            <genmsgid>false</genmsgid>
+            <reportCoaOptions>None</reportCoaOptions>
+            <reportCodOptions>None</reportCodOptions>
+            <reportExceptionOptions>None</reportExceptionOptions>
+            <reportExpiryOptions>None</reportExpiryOptions>
+            <priority>0</priority>
+            <asyncPut>false</asyncPut>
+            <passContext>all</passContext>
+            <poolacitivity>false</poolacitivity>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
+            <destination>wcn.unit.test.topic</destination>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <appProperties>
+                    <xsl:if test="$Start/pfx:HttpProps/pfx:key">
+                        <key>
+                            <xsl:value-of select="$Start/pfx:HttpProps/pfx:key"/>
+                        </key>
+                    </xsl:if>
+                </appProperties>
+                <text>
+                    <xsl:value-of select="$Start/pfx:HttpProps/pfx:req"/>
+                </text>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Wait">
+        <pd:type>com.tibco.plugin.waitnotify.WaitActivity</pd:type>
+        <pd:resourceType>ae.activities.waitActivity</pd:resourceType>
+        <pd:x>529</pd:x>
+        <pd:y>76</pd:y>
+        <config>
+            <sharedConfig>/Resources/MQNotify.sharednotify</sharedConfig>
+        </config>
+        <pd:inputBindings>
+            <input>
+                <key>
+                    <xsl:value-of select="$_processContext/ns:ProcessContext/ProcessId"/>
+                </key>
+                <timeout>
+                    <xsl:value-of select="3000"/>
+                </timeout>
+            </input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>IBM MQ Publish Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Publish Activity</pd:from>
+        <pd:to>Wait</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Wait</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

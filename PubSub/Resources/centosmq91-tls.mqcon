@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BWSharedResource>
+    <name>centosmq91-tls</name>
+    <resourceType>plugin.bwmq.ConnectionResource</resourceType>
+    <config>
+        <version>7.8.0</version>
+        <qmanagerbindingmode>remote</qmanagerbindingmode>
+        <host>centosmq91.wcn.org</host>
+        <qmanagerport>1414</qmanagerport>
+        <qmanager/>
+        <pooled>true</pooled>
+        <qmanageractive>15</qmanageractive>
+        <qmanagerunused>5</qmanagerunused>
+        <qmanagertimeout>10000</qmanagertimeout>
+        <tls>true</tls>
+        <keyorident>Keystore</keyorident>
+        <hdrcomp>false</hdrcomp>
+        <msgcomp>msgcomp_none</msgcomp>
+        <noverifypooledconnection>false</noverifypooledconnection>
+        <userid>mqm</userid>
+        <PASSWORD>mqm</PASSWORD>
+        <serverchannel>SVRCONNTLS</serverchannel>
+        <keystore>/gil/local/pub/certs/centosmq91/client.jks</keystore>
+        <keystorepwd>#!LydzbBXOYY2gNMIfZpeddohJahMkXxwPYaoNK8XeTCg=</keystorepwd>
+        <ciphersuite>TLS_RSA_WITH_AES_256_CBC_SHA256</ciphersuite>
+    </config>
+</BWSharedResource>

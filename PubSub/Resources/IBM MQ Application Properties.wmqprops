@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BWSharedResource>
+    <name>IBM MQ Application Properties</name>
+    <resourceType>plugin.bwmq.WMQAppPropResource</resourceType>
+    <config>
+        <version>7.8.0</version>
+        <properties>
+            <row>
+                <propertyname>key</propertyname>
+                <propertytype>string</propertytype>
+                <propertycardinality>optional</propertycardinality>
+            </row>
+        </properties>
+    </config>
+</BWSharedResource>
