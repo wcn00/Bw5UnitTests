@@ -2,20 +2,20 @@
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
     <pd:name>Processes/Multimessage/Segmented/PutGet.process</pd:name>
     <pd:startName>Start</pd:startName>
-    <pd:startX>150</pd:startX>
-    <pd:startY>64</pd:startY>
+    <pd:startX>88</pd:startX>
+    <pd:startY>155</pd:startY>
     <pd:returnBindings/>
     <pd:endName>End</pd:endName>
-    <pd:endX>673</pd:endX>
-    <pd:endY>71</pd:endY>
+    <pd:endX>1284</pd:endX>
+    <pd:endY>132</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1601071403293</pd:targetNamespace>
     <pd:activity name="IBM MQ Put Activity">
         <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
         <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
-        <pd:x>290</pd:x>
-        <pd:y>71</pd:y>
+        <pd:x>284</pd:x>
+        <pd:y>164</pd:y>
         <config>
             <version>7.8.0</version>
             <contentType>Text</contentType>
@@ -49,48 +49,11 @@
             </InteractionInput>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="IBM MQ Get Activity">
-        <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
-        <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
-        <pd:x>438</pd:x>
-        <pd:y>85</pd:y>
-        <config>
-            <version>7.8.0</version>
-            <contentType>Text</contentType>
-            <desttype>QUEUE</desttype>
-            <dynamic>false</dynamic>
-            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
-            <threadpool>2</threadpool>
-            <closeOptions>none</closeOptions>
-            <waitforever>false</waitforever>
-            <multiMessage>CustomSegmented</multiMessage>
-            <completeMessage>true</completeMessage>
-            <getOrdered>true</getOrdered>
-            <explicitSync>true</explicitSync>
-            <batchquantity>1</batchquantity>
-            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
-            <poolacitivity>false</poolacitivity>
-            <segmentation>None</segmentation>
-            <destination>bwmq_segmented</destination>
-            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
-        </config>
-        <pd:inputBindings>
-            <InteractionInput>
-                <mqproperties>
-                    <xsl:if test="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId">
-                        <correlationId>
-                            <xsl:value-of select="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId"/>
-                        </correlationId>
-                    </xsl:if>
-                </mqproperties>
-            </InteractionInput>
-        </pd:inputBindings>
-    </pd:activity>
     <pd:activity name="Log">
         <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
         <pd:resourceType>ae.activities.log</pd:resourceType>
-        <pd:x>560</pd:x>
-        <pd:y>79</pd:y>
+        <pd:x>1163</pd:x>
+        <pd:y>125</pd:y>
         <config>
             <role>User</role>
         </config>
@@ -102,6 +65,157 @@
             </ns:ActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>411</pd:x>
+        <pd:y>35</pd:y>
+        <pd:width>491</pd:width>
+        <pd:height>218</pd:height>
+        <pd:collapsedWidth>61</pd:collapsedWidth>
+        <pd:collapsedHeight>72</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <config>
+            <pd:groupType>repeat</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>idx</pd:indexSlot>
+            <pd:outSlot>AccumulatedGetOutput</pd:outSlot>
+            <pd:activityOutputName>IBM MQ Get Activity</pd:activityOutputName>
+            <pd:repeatCondition>$IBM-MQ-Get-Activity/InteractionOutput/lastMessageInGroup = "true"</pd:repeatCondition>
+            <pd:accumulateOutput>true</pd:accumulateOutput>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>false</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>IBM MQ Get Activity</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Log-1</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Log-1-1</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM MQ Get Activity</pd:from>
+            <pd:to>Log-1</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM MQ Get Activity</pd:from>
+            <pd:to>Log-1-1</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>xpath</pd:conditionType>
+            <pd:xpath>$IBM-MQ-Get-Activity/InteractionOutput/lastMessageInGroup</pd:xpath>
+        </pd:transition>
+        <pd:activity name="IBM MQ Get Activity">
+            <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+            <pd:x>499</pd:x>
+            <pd:y>112</pd:y>
+            <config>
+                <version>7.8.0</version>
+                <contentType>Text</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+                <threadpool>2</threadpool>
+                <closeOptions>none</closeOptions>
+                <waitforever>false</waitforever>
+                <multiMessage>CustomSegmented</multiMessage>
+                <completeMessage>true</completeMessage>
+                <getOrdered>true</getOrdered>
+                <explicitSync>true</explicitSync>
+                <batchquantity>1</batchquantity>
+                <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <destination>bwmq_segmented</destination>
+                <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+                <commitWithSyncPoint>true</commitWithSyncPoint>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <mqproperties>
+                        <xsl:if test="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId">
+                            <correlationId>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId"/>
+                            </correlationId>
+                        </xsl:if>
+                    </mqproperties>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="Log-1">
+            <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+            <pd:resourceType>ae.activities.log</pd:resourceType>
+            <pd:x>660</pd:x>
+            <pd:y>110</pd:y>
+            <config>
+                <role>User</role>
+            </config>
+            <pd:inputBindings>
+                <ns:ActivityInput>
+                    <message>
+                        <xsl:value-of select="$IBM-MQ-Get-Activity/InteractionOutput/lastMessageInGroup"/>
+                    </message>
+                    <xsl:if test="$IBM-MQ-Get-Activity/InteractionOutput/lastMessageInGroup">
+                        <msgCode>
+                            <xsl:value-of select="boolean($IBM-MQ-Get-Activity/InteractionOutput/lastMessageInGroup)"/>
+                        </msgCode>
+                    </xsl:if>
+                </ns:ActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="Log-1-1">
+            <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+            <pd:resourceType>ae.activities.log</pd:resourceType>
+            <pd:x>652</pd:x>
+            <pd:y>180</pd:y>
+            <config>
+                <role>User</role>
+            </config>
+            <pd:inputBindings>
+                <ns:ActivityInput>
+                    <message>
+                        <xsl:value-of select="&quot;Its true!!!!&quot;"/>
+                    </message>
+                </ns:ActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:activity name="IBM MQ SyncPoint Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqSyncPointActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqSyncPointActivity</pd:resourceType>
+        <pd:x>989</pd:x>
+        <pd:y>139</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <contentType>Binary</contentType>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <commit>
+                    <xsl:value-of select="boolean(1)"/>
+                </commit>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>Start</pd:from>
         <pd:to>IBM MQ Put Activity</pd:to>
@@ -110,22 +224,29 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>IBM MQ Get Activity</pd:from>
-        <pd:to>Log</pd:to>
+        <pd:from>Log</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>IBM MQ SyncPoint Activity</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
         <pd:from>IBM MQ Put Activity</pd:from>
-        <pd:to>IBM MQ Get Activity</pd:to>
+        <pd:to>Group</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Log</pd:from>
-        <pd:to>End</pd:to>
+        <pd:from>IBM MQ SyncPoint Activity</pd:from>
+        <pd:to>Log</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>

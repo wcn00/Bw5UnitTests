@@ -43,7 +43,7 @@
             <poolacitivity>false</poolacitivity>
             <connectionresource>/Resources/centosmq91pooled.mqcon</connectionresource>
             <destination>basicreq</destination>
-            <replytodestination>basicreply</replytodestination>
+            <replytodestination>basicdynamreply</replytodestination>
             <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
             <dynamicreply>true</dynamicreply>
             <dynamictemplatequeue>mq.dynam.reply</dynamictemplatequeue>
