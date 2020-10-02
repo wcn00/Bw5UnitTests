@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:ns1="http://www.tibco.com/pe/EngineTypes">
-    <pd:name>Processes/Servicedispatch/Dispatcher.process</pd:name>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema">
+    <pd:name>Processes/Inquire/DispatchInquire.process</pd:name>
     <pd:startName>HTTP Receiver</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
@@ -8,14 +8,15 @@
     <pd:starter name="HTTP Receiver">
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>97</pd:x>
-        <pd:y>115</pd:y>
+        <pd:x>135</pd:x>
+        <pd:y>354</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>ISO8859_1</defaultEncoding>
             <inputOutputVersion>5.3.0</inputOutputVersion>
             <newMimeSupport>true</newMimeSupport>
-            <sharedChannel>/Resources/HTTP Connection.sharedhttp</sharedChannel>
+            <sharedChannel>/Resources/HTTP-Connection-1.sharedhttp</sharedChannel>
+            <parsePostData>false</parsePostData>
             <customField>
                 <row>
                     <attribute>op</attribute>
@@ -38,14 +39,6 @@
                     <attributeCard>optional</attributeCard>
                 </row>
             </customField>
-            <policies>
-                <incomingAttachmentPolicy>
-                    <writeToFile>false</writeToFile>
-                    <writeToFileDir>/home/wcn00/Downloads</writeToFileDir>
-                    <writeToFileLimit/>
-                    <createNonExistDir>false</createNonExistDir>
-                </incomingAttachmentPolicy>
-            </policies>
             <Headers>
                 <xsd:element name="root">
                     <xsd:complexType>
@@ -66,105 +59,18 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>1156</pd:endX>
-    <pd:endY>257</pd:endY>
+    <pd:endX>1417</pd:endX>
+    <pd:endY>495</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
-    <pd:targetNamespace>http://xmlns.example.com/1601043711970</pd:targetNamespace>
-    <pd:activity name="Send HTTP Response">
-        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
-        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>623</pd:x>
-        <pd:y>48</pd:y>
-        <config>
-            <closeConnection>true</closeConnection>
-            <eventSource>HTTP Receiver</eventSource>
-            <Headers>
-                <xsd:element name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </Headers>
-        </config>
-        <pd:inputBindings>
-            <ResponseActivityInput>
-                <asciiContent>
-                    <xsl:value-of select="concat(&quot;msg: &quot;, $publishplain/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $publishplain/ns:HttpProps/ns:msgcode)"/>
-                </asciiContent>
-                <Headers>
-                    <xsl:if test="$publishplain/ns:HttpProps/ns:resp">
-                        <StatusLine>
-                            <xsl:value-of select="$publishplain/ns:HttpProps/ns:resp"/>
-                        </StatusLine>
-                    </xsl:if>
-                </Headers>
-            </ResponseActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="publishplain">
+    <pd:targetNamespace>http://xmlns.example.com/1601486335704</pd:targetNamespace>
+    <pd:activity name="Inquire">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>388</pd:x>
-        <pd:y>53</pd:y>
+        <pd:x>545</pd:x>
+        <pd:y>89</pd:y>
         <config>
-            <processName>/Processes/PubSubPlain/publishplain.process</processName>
-        </config>
-        <pd:inputBindings>
-            <ns:HttpProps>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
-                    <ns:op>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
-                    </ns:op>
-                </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
-                    <ns:req>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
-                    </ns:req>
-                </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/resp">
-                    <ns:resp>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/resp"/>
-                    </ns:resp>
-                </xsl:if>
-                <ns:key>
-                    <xsl:value-of select="$_processContext/ns1:ProcessContext/ProcessId"/>
-                </ns:key>
-            </ns:HttpProps>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Log">
-        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
-        <pd:resourceType>ae.activities.log</pd:resourceType>
-        <pd:x>527</pd:x>
-        <pd:y>1141</pd:y>
-        <config>
-            <role>User</role>
-        </config>
-        <pd:inputBindings>
-            <ns2:ActivityInput>
-                <message>
-                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
-                </message>
-                <msgCode>
-                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
-                </msgCode>
-            </ns2:ActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="publishconfirm">
-        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
-        <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>393</pd:x>
-        <pd:y>126</pd:y>
-        <config>
-            <processName>/Processes/PubSubConfirm/publishconfirm.process</processName>
+            <processName>/Processes/Inquire/Inquire.process</processName>
         </config>
         <pd:inputBindings>
             <ns:HttpProps>
@@ -183,22 +89,14 @@
                         <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
                     </ns:iter>
                 </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/resp">
-                    <ns:resp>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/resp"/>
-                    </ns:resp>
-                </xsl:if>
-                <ns:key>
-                    <xsl:value-of select="$_processContext/ns1:ProcessContext/ProcessId"/>
-                </ns:key>
             </ns:HttpProps>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="Send-HTTP-Response-1">
+    <pd:activity name="Send HTTP Response">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>614</pd:x>
-        <pd:y>123</pd:y>
+        <pd:x>716</pd:x>
+        <pd:y>87</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -219,25 +117,106 @@
         <pd:inputBindings>
             <ResponseActivityInput>
                 <asciiContent>
-                    <xsl:value-of select="concat(&quot;msg: &quot;, $publishconfirm/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $publishconfirm/ns:HttpProps/ns:msgcode)"/>
+                    <xsl:value-of select="concat(&quot;msg: &quot;, $Inquire/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $Inquire/ns:HttpProps/ns:msgcode)"/>
                 </asciiContent>
                 <Headers>
-                    <xsl:if test="$publishconfirm/ns:HttpProps/ns:resp">
+                    <xsl:if test="$Inquire/ns:HttpProps/ns:resp">
                         <StatusLine>
-                            <xsl:value-of select="$publishconfirm/ns:HttpProps/ns:resp"/>
+                            <xsl:value-of select="$Inquire/ns:HttpProps/ns:resp"/>
                         </StatusLine>
                     </xsl:if>
                 </Headers>
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>135</pd:x>
+        <pd:y>526</pd:y>
+        <config>
+            <faultName/>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <message>
+                    <xsl:value-of select="&quot;Bad request&quot;"/>
+                </message>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Send-HTTP-Response-1">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>735</pd:x>
+        <pd:y>293</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="concat(&quot;msg: &quot;, $InquireLoop/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $InquireLoop/ns:HttpProps/ns:msgcode)"/>
+                </asciiContent>
+                <Headers>
+                    <xsl:if test="$InquireLoop/ns:HttpProps/ns:resp">
+                        <StatusLine>
+                            <xsl:value-of select="$InquireLoop/ns:HttpProps/ns:resp"/>
+                        </StatusLine>
+                    </xsl:if>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="InquireLoop">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>542</pd:x>
+        <pd:y>287</pd:y>
+        <config>
+            <processName>/Processes/Inquire/InquireLoop.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns:HttpProps>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
+                    <ns:op>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
+                    </ns:op>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
+                    <ns:req>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
+                    </ns:req>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/iter">
+                    <ns:iter>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
+                    </ns:iter>
+                </xsl:if>
+            </ns:HttpProps>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:activity name="PutGet">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>387</pd:x>
-        <pd:y>203</pd:y>
+        <pd:x>542</pd:x>
+        <pd:y>366</pd:y>
         <config>
-            <processName>/Processes/PutGet/Discrete/PutGet.process</processName>
+            <processName>/Processes/Multimessage/Logical/PutGet.process</processName>
         </config>
         <pd:inputBindings>
             <ns:HttpProps>
@@ -257,8 +236,8 @@
     <pd:activity name="Send-HTTP-Response-1-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>612</pd:x>
-        <pd:y>192</pd:y>
+        <pd:x>747</pd:x>
+        <pd:y>356</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -291,34 +270,11 @@
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="PutGet-1">
-        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
-        <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>401</pd:x>
-        <pd:y>280</pd:y>
-        <config>
-            <processName>/Processes/PutGet/Cached/PutGet.process</processName>
-        </config>
-        <pd:inputBindings>
-            <ns:HttpProps>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
-                    <ns:op>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
-                    </ns:op>
-                </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
-                    <ns:req>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
-                    </ns:req>
-                </xsl:if>
-            </ns:HttpProps>
-        </pd:inputBindings>
-    </pd:activity>
     <pd:activity name="Send-HTTP-Response-1-1-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>626</pd:x>
-        <pd:y>270</pd:y>
+        <pd:x>727</pd:x>
+        <pd:y>446</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -351,13 +307,25 @@
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="reqreply">
+    <pd:activity name="PutGet-1">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>408</pd:x>
-        <pd:y>356</pd:y>
+        <pd:x>528</pd:x>
+        <pd:y>447</pd:y>
         <config>
-            <processName>/Processes/ReqReply/Basic/reqreply.process</processName>
+            <processName>/Processes/Multimessage/Segmented/PutGet.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns:HttpProps/>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="PutGetPooled">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>536</pd:x>
+        <pd:y>548</pd:y>
+        <config>
+            <processName>/Processes/Multimessage/Segmented/PutGetPooled.process</processName>
         </config>
         <pd:inputBindings>
             <ns:HttpProps>
@@ -375,6 +343,11 @@
                     <ns:iter>
                         <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
                     </ns:iter>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/resp">
+                    <ns:resp>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/resp"/>
+                    </ns:resp>
                 </xsl:if>
             </ns:HttpProps>
         </pd:inputBindings>
@@ -382,8 +355,8 @@
     <pd:activity name="Send-HTTP-Response-1-1-1-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>606</pd:x>
-        <pd:y>362</pd:y>
+        <pd:x>757</pd:x>
+        <pd:y>556</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -404,25 +377,60 @@
         <pd:inputBindings>
             <ResponseActivityInput>
                 <asciiContent>
-                    <xsl:value-of select="concat(&quot;msg: &quot;, $reqreply/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $reqreply/ns:HttpProps/ns:msgcode)"/>
+                    <xsl:value-of select="concat(&quot;msg: &quot;, $PutGetPooled/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $PutGetPooled/ns:HttpProps/ns:msgcode)"/>
                 </asciiContent>
                 <Headers>
-                    <xsl:if test="$reqreply/ns:HttpProps/ns:resp">
+                    <xsl:if test="$PutGetPooled/ns:HttpProps/ns:resp">
                         <StatusLine>
-                            <xsl:value-of select="$reqreply/ns:HttpProps/ns:resp"/>
+                            <xsl:value-of select="$PutGetPooled/ns:HttpProps/ns:resp"/>
                         </StatusLine>
                     </xsl:if>
                 </Headers>
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="reqreply-1">
+    <pd:activity name="Send-HTTP-Response-2">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>711</pd:x>
+        <pd:y>196</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="$InquireBad/ns:HttpProps/ns:req"/>
+                </asciiContent>
+                <Headers>
+                    <StatusLine>
+                        <xsl:value-of select="&quot;HTTP/1.1 200 OK&quot;"/>
+                    </StatusLine>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="InquireBad">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>388</pd:x>
-        <pd:y>444</pd:y>
+        <pd:x>528</pd:x>
+        <pd:y>192</pd:y>
         <config>
-            <processName>/Processes/ReqReply/BasicDynamReply/reqreply.process</processName>
+            <processName>/Processes/Inquire/InquireBad.process</processName>
         </config>
         <pd:inputBindings>
             <ns:HttpProps>
@@ -441,184 +449,24 @@
                         <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
                     </ns:iter>
                 </xsl:if>
-            </ns:HttpProps>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Send-HTTP-Response-1-1-1-1-1">
-        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
-        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>625</pd:x>
-        <pd:y>446</pd:y>
-        <config>
-            <closeConnection>true</closeConnection>
-            <eventSource>HTTP Receiver</eventSource>
-            <Headers>
-                <xsd:element name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </Headers>
-        </config>
-        <pd:inputBindings>
-            <ResponseActivityInput>
-                <asciiContent>
-                    <xsl:value-of select="concat(&quot;msg: &quot;, $reqreply-1/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $reqreply-1/ns:HttpProps/ns:msgcode)"/>
-                </asciiContent>
-                <Headers>
-                    <xsl:if test="$reqreply-1/ns:HttpProps/ns:resp">
-                        <StatusLine>
-                            <xsl:value-of select="$reqreply-1/ns:HttpProps/ns:resp"/>
-                        </StatusLine>
-                    </xsl:if>
-                </Headers>
-            </ResponseActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="reqreply-2">
-        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
-        <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>396</pd:x>
-        <pd:y>542</pd:y>
-        <config>
-            <processName>/Processes/ReqReply/Cached/reqreply.process</processName>
-        </config>
-        <pd:inputBindings>
-            <ns:HttpProps>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
-                    <ns:op>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
-                    </ns:op>
-                </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
-                    <ns:req>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
-                    </ns:req>
-                </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/iter">
-                    <ns:iter>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
-                    </ns:iter>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/resp">
+                    <ns:resp>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/resp"/>
+                    </ns:resp>
                 </xsl:if>
             </ns:HttpProps>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Send-HTTP-Response-1-1-1-1-1-1">
-        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
-        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>624</pd:x>
-        <pd:y>542</pd:y>
-        <config>
-            <closeConnection>true</closeConnection>
-            <eventSource>HTTP Receiver</eventSource>
-            <Headers>
-                <xsd:element name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </Headers>
-        </config>
-        <pd:inputBindings>
-            <ResponseActivityInput>
-                <asciiContent>
-                    <xsl:value-of select="concat(&quot;msg: &quot;, $reqreply-2/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $reqreply-2/ns:HttpProps/ns:msgcode)"/>
-                </asciiContent>
-                <Headers>
-                    <xsl:if test="$reqreply-2/ns:HttpProps/ns:resp">
-                        <StatusLine>
-                            <xsl:value-of select="$reqreply-2/ns:HttpProps/ns:resp"/>
-                        </StatusLine>
-                    </xsl:if>
-                </Headers>
-            </ResponseActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="reqreply-3">
-        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
-        <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>410</pd:x>
-        <pd:y>644</pd:y>
-        <config>
-            <processName>/Processes/ReqReply/CachedDynamReply/reqreply.process</processName>
-        </config>
-        <pd:inputBindings>
-            <ns:HttpProps>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
-                    <ns:op>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
-                    </ns:op>
-                </xsl:if>
-                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
-                    <ns:req>
-                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
-                    </ns:req>
-                </xsl:if>
-                <ns:iter>
-                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
-                </ns:iter>
-            </ns:HttpProps>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Send-HTTP-Response-1-1-1-1-1-1-1">
-        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
-        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>626</pd:x>
-        <pd:y>648</pd:y>
-        <config>
-            <closeConnection>true</closeConnection>
-            <eventSource>HTTP Receiver</eventSource>
-            <Headers>
-                <xsd:element name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </Headers>
-        </config>
-        <pd:inputBindings>
-            <ResponseActivityInput>
-                <asciiContent>
-                    <xsl:value-of select="concat(&quot;msg: &quot;, $reqreply-3/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $reqreply-3/ns:HttpProps/ns:msgcode)"/>
-                </asciiContent>
-                <Headers>
-                    <xsl:if test="$reqreply-3/ns:HttpProps/ns:resp">
-                        <StatusLine>
-                            <xsl:value-of select="$reqreply-3/ns:HttpProps/ns:resp"/>
-                        </StatusLine>
-                    </xsl:if>
-                </Headers>
-            </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>publishplain</pd:to>
+        <pd:to>Inquire</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "publishplain"</pd:xpath>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "inquire"</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>publishplain</pd:from>
+        <pd:from>Inquire</pd:from>
         <pd:to>Send HTTP Response</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
@@ -633,28 +481,21 @@
     </pd:transition>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>Log</pd:to>
+        <pd:to>Generate Error</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Log</pd:from>
-        <pd:to>End</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>publishconfirm</pd:to>
+        <pd:to>InquireLoop</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "publishconfirm"</pd:xpath>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "inquireloop"</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>publishconfirm</pd:from>
+        <pd:from>InquireLoop</pd:from>
         <pd:to>Send-HTTP-Response-1</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
@@ -673,7 +514,7 @@
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "putgetbasic"</pd:xpath>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "logical"</pd:xpath>
     </pd:transition>
     <pd:transition>
         <pd:from>PutGet</pd:from>
@@ -695,7 +536,7 @@
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "putgetcached"</pd:xpath>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "segmented"</pd:xpath>
     </pd:transition>
     <pd:transition>
         <pd:from>PutGet-1</pd:from>
@@ -713,14 +554,14 @@
     </pd:transition>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>reqreply</pd:to>
+        <pd:to>PutGetPooled</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "reqreply"</pd:xpath>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "segmentedpooled"</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>reqreply</pd:from>
+        <pd:from>PutGetPooled</pd:from>
         <pd:to>Send-HTTP-Response-1-1-1-1</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
@@ -735,65 +576,21 @@
     </pd:transition>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>reqreply-1</pd:to>
+        <pd:to>InquireBad</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "reqreplydynamic"</pd:xpath>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "inquirebad"</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>reqreply-1</pd:from>
-        <pd:to>Send-HTTP-Response-1-1-1-1-1</pd:to>
+        <pd:from>InquireBad</pd:from>
+        <pd:to>Send-HTTP-Response-2</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Send-HTTP-Response-1-1-1-1-1</pd:from>
-        <pd:to>End</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>HTTP Receiver</pd:from>
-        <pd:to>reqreply-2</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "reqreplycached"</pd:xpath>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>reqreply-2</pd:from>
-        <pd:to>Send-HTTP-Response-1-1-1-1-1-1</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Send-HTTP-Response-1-1-1-1-1-1</pd:from>
-        <pd:to>End</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>HTTP Receiver</pd:from>
-        <pd:to>reqreply-3</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "reqreplycacheddynamic"</pd:xpath>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>reqreply-3</pd:from>
-        <pd:to>Send-HTTP-Response-1-1-1-1-1-1-1</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Send-HTTP-Response-1-1-1-1-1-1-1</pd:from>
+        <pd:from>Send-HTTP-Response-2</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
     <pd:name>Processes/Multimessage/Logical/PutGet.process</pd:name>
     <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
     <pd:startX>150</pd:startX>
     <pd:startY>64</pd:startY>
-    <pd:returnBindings/>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <pfx:resp>
+                <xsl:value-of select="if ($Map-Data/pfx:HttpProps/pfx:resp) then $Map-Data/pfx:HttpProps/pfx:resp else &quot;HTTP/1.1 200 OK&quot;"/>
+            </pfx:resp>
+        </pfx:HttpProps>
+    </pd:returnBindings>
     <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
     <pd:endX>854</pd:endX>
     <pd:endY>75</pd:endY>
     <pd:errorSchemas/>
@@ -45,52 +54,52 @@
             <Batch>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
                 <InteractionInput>
                     <text>
-                        <xsl:value-of select="tib:pad(&quot;This is a 1k logical message&quot;, 1024,'z')"/>
+                        <xsl:value-of select="tib:pad(         $Start/pfx:HttpProps/pfx:req      , 1024,'z')"/>
                     </text>
                 </InteractionInput>
             </Batch>
@@ -124,6 +133,41 @@
         </config>
         <pd:inputBindings/>
     </pd:activity>
+    <pd:activity name="Map Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>751</pd:x>
+        <pd:y>227</pd:y>
+        <config>
+            <element ref="pfx:HttpProps"/>
+        </config>
+        <pd:inputBindings>
+            <ns1:HttpProps xmlns:ns1="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd">
+                <ns1:resp>
+                    <xsl:value-of select="&quot;HTTP/1.1 500 Error&quot;"/>
+                </ns1:resp>
+                <ns1:msg>
+                    <xsl:value-of select="$Catch/ns:BwmqException/msg"/>
+                </ns1:msg>
+                <xsl:if test="$Catch/ns:BwmqException/msgCode">
+                    <ns1:msgcode>
+                        <xsl:value-of select="$Catch/ns:BwmqException/msgCode"/>
+                    </ns1:msgcode>
+                </xsl:if>
+            </ns1:HttpProps>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>547</pd:x>
+        <pd:y>230</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
     <pd:transition>
         <pd:from>Start</pd:from>
         <pd:to>PugLogical10</pd:to>
@@ -140,6 +184,20 @@
     </pd:transition>
     <pd:transition>
         <pd:from>GetLogical10</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Map Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map Data</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>

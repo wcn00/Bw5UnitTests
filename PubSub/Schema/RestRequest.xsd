@@ -16,6 +16,8 @@
 				<xs:element ref="iter" minOccurs="0"/>
 				<xs:element ref="resp" minOccurs="0"/>
 				<xs:element ref="key" minOccurs="0"/>
+				<xs:element ref="msg" minOccurs="0"/>
+				<xs:element ref="msgcode" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -24,4 +26,6 @@
 	<xs:element name="iter" type="xs:int"/>
 	<xs:element name="resp" type="xs:string"/>
 	<xs:element name="key" type="xs:string"/>
+	<xs:element name="msg" type="xs:string"/>
+	<xs:element name="msgcode" type="xs:string"/>
 </xs:schema>

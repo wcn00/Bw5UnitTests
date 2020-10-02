@@ -21,11 +21,11 @@
             <enablepolling>false</enablepolling>
             <failifquiesce>true</failifquiesce>
             <desttype>TOPIC</desttype>
-            <newpubsonly>false</newpubsonly>
+            <newpubsonly>true</newpubsonly>
             <durablesubscription>false</durablesubscription>
             <reconnectioninterval>10000</reconnectioninterval>
             <wildcardscheme>TOPIC</wildcardscheme>
-            <connectionresource>/Resources/centosmq91pooled.mqcon</connectionresource>
+            <connectionresource>/Resources/centosmq91.mqcon</connectionresource>
             <destination>wcn.unit.test.topic</destination>
             <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
         </config>

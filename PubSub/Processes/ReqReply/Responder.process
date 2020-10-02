@@ -8,8 +8,8 @@
     <pd:starter name="IBM MQ Listener Start">
         <pd:type>com.tibco.plugin.bwmq.QueueListenerActivity</pd:type>
         <pd:resourceType>plugin.bwmq.QueueListenerResource</pd:resourceType>
-        <pd:x>135</pd:x>
-        <pd:y>88</pd:y>
+        <pd:x>144</pd:x>
+        <pd:y>100</pd:y>
         <config>
             <version>7.8.0</version>
             <pollingtimeout>1000</pollingtimeout>
@@ -37,8 +37,8 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>937</pd:endX>
-    <pd:endY>124</pd:endY>
+    <pd:endX>751</pd:endX>
+    <pd:endY>108</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1601055378322</pd:targetNamespace>
