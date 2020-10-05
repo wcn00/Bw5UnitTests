@@ -13,6 +13,16 @@
                     <xsl:value-of select="if ($Map-Data/pfx:HttpProps/pfx:resp) then $Map-Data/pfx:HttpProps/pfx:resp else &quot;HTTP/1.1 200 OK&quot;"/>
                 </pfx:resp>
             </xsl:if>
+            <xsl:if test="$Map-Data/pfx:HttpProps/pfx:msg">
+                <pfx:msg>
+                    <xsl:value-of select="$Map-Data/pfx:HttpProps/pfx:msg"/>
+                </pfx:msg>
+            </xsl:if>
+            <xsl:if test="$Map-Data/pfx:HttpProps/pfx:msgcode">
+                <pfx:msgcode>
+                    <xsl:value-of select="$Map-Data/pfx:HttpProps/pfx:msgcode"/>
+                </pfx:msgcode>
+            </xsl:if>
         </pfx:HttpProps>
     </pd:returnBindings>
     <pd:endName>End</pd:endName>

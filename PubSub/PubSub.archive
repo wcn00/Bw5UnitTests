@@ -8,9 +8,9 @@
         <processArchive name="Process Archive">
             <resourceType>process.archive.resource</resourceType>
             <authorProperty>wcn00</authorProperty>
-            <processProperty>/Processes/Servicedispatch/Dispatcher.process,/Processes/PubSubPlain/Responder.process,/Processes/PubSubConfirm/Responder.process,/Processes/PutGet/Discrete/PutGetResponder.process,/Processes/PutGet/Cached/PutGetResponder.process,/Processes/ReqReply/Responder.process,/Processes/Inquire/DispatchInquire.process</processProperty>
+            <processProperty>/Processes/Servicedispatch/Dispatcher.process,/Processes/PubSubPlain/Responder.process,/Processes/PubSubConfirm/Responder.process,/Processes/PutGet/Discrete/PutGetResponder.process,/Processes/PutGet/Cached/PutGetResponder.process,/Processes/ReqReply/Responder.process,/Processes/Servicedispatch/DispatchInquire.process,/Processes/Perf/ProcessBatchedRequestsConfirm.process</processProperty>
         </processArchive>
-        <versionProperty>28</versionProperty>
+        <versionProperty>36</versionProperty>
         <authorProperty>wcn00</authorProperty>
         <addServiceSettableGvars>true</addServiceSettableGvars>
         <name>PubSub</name>

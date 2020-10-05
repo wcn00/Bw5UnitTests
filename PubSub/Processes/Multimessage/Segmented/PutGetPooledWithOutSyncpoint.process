@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns2="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns3="http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions">
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns2="http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType">
     <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
-    <pd:name>Processes/Multimessage/Segmented/PutGet.process</pd:name>
+    <pd:name>Processes/Multimessage/Segmented/PutGetPooledWithOutSyncpoint.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType ref="pfx:HttpProps"/>
     <pd:startX>88</pd:startX>
     <pd:startY>155</pd:startY>
     <pd:returnBindings>
         <pfx:HttpProps>
+            <pfx:req>
+                <xsl:value-of select="concat(&quot;Reconstituted string from segmented message length is: &quot;,string-length($IBM-MQ-Get-Activity/InteractionOutput/text))"/>
+            </pfx:req>
             <pfx:resp>
                 <xsl:value-of select="if ($Map-Data/pfx:HttpProps/pfx:resp) then $Map-Data/pfx:HttpProps/pfx:resp else &quot;HTTP/1.1 200 OK&quot;"/>
             </pfx:resp>
@@ -25,16 +28,16 @@
     </pd:returnBindings>
     <pd:endName>End</pd:endName>
     <pd:endType ref="pfx:HttpProps"/>
-    <pd:endX>996</pd:endX>
-    <pd:endY>106</pd:endY>
+    <pd:endX>809</pd:endX>
+    <pd:endY>119</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1601071403293</pd:targetNamespace>
     <pd:activity name="IBM MQ Put Activity">
         <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
         <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
-        <pd:x>290</pd:x>
-        <pd:y>99</pd:y>
+        <pd:x>292</pd:x>
+        <pd:y>90</pd:y>
         <config>
             <version>7.8.0</version>
             <contentType>Text</contentType>
@@ -49,14 +52,14 @@
             <reportCodOptions>None</reportCodOptions>
             <reportExceptionOptions>None</reportExceptionOptions>
             <reportExpiryOptions>None</reportExpiryOptions>
-            <multiMessage>CustomGroup</multiMessage>
+            <multiMessage>None</multiMessage>
             <segmentedMaxSize>1024</segmentedMaxSize>
             <asyncPut>false</asyncPut>
             <passContext>all</passContext>
             <clusterloadbalance>false</clusterloadbalance>
-            <poolacitivity>false</poolacitivity>
-            <segmentation>Explicit</segmentation>
-            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <poolacitivity>true</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91.mqcon</connectionresource>
             <destination>bwmq_segmented</destination>
             <gencorrid>true</gencorrid>
         </config>
@@ -71,10 +74,10 @@
     <pd:group name="Group">
         <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
         <pd:resourceType>ae.process.group</pd:resourceType>
-        <pd:x>173</pd:x>
-        <pd:y>278</pd:y>
-        <pd:width>763</pd:width>
-        <pd:height>245</pd:height>
+        <pd:x>267</pd:x>
+        <pd:y>216</pd:y>
+        <pd:width>296</pd:width>
+        <pd:height>212</pd:height>
         <pd:collapsedWidth>57</pd:collapsedWidth>
         <pd:collapsedHeight>70</pd:collapsedHeight>
         <pd:groupVariables/>
@@ -107,8 +110,8 @@
         <pd:activity name="IBM MQ Get Activity">
             <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
             <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
-            <pd:x>546</pd:x>
-            <pd:y>422</pd:y>
+            <pd:x>427</pd:x>
+            <pd:y>331</pd:y>
             <config>
                 <version>7.8.0</version>
                 <contentType>Text</contentType>
@@ -124,20 +127,15 @@
                 <explicitSync>false</explicitSync>
                 <batchquantity>1</batchquantity>
                 <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
-                <poolacitivity>false</poolacitivity>
+                <poolacitivity>true</poolacitivity>
                 <segmentation>None</segmentation>
                 <destination>bwmq_segmented</destination>
-                <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
-                <commitWithSyncPoint>true</commitWithSyncPoint>
+                <connectionresource>/Resources/centosmq91.mqcon</connectionresource>
+                <commitWithSyncPoint>false</commitWithSyncPoint>
             </config>
             <pd:inputBindings>
                 <InteractionInput>
                     <mqproperties>
-                        <xsl:if test="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId">
-                            <correlationId>
-                                <xsl:value-of select="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId"/>
-                            </correlationId>
-                        </xsl:if>
                         <waitInterval>
                             <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/MQVars/waitinterval"/>
                         </waitInterval>
@@ -146,29 +144,11 @@
             </pd:inputBindings>
         </pd:activity>
     </pd:group>
-    <pd:activity name="IBM MQ SyncPoint Activity">
-        <pd:type>com.tibco.plugin.bwmq.MqSyncPointActivity</pd:type>
-        <pd:resourceType>plugin.bwmq.MqSyncPointActivity</pd:resourceType>
-        <pd:x>570</pd:x>
-        <pd:y>113</pd:y>
-        <config>
-            <version>7.8.0</version>
-            <contentType>Binary</contentType>
-            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
-        </config>
-        <pd:inputBindings>
-            <InteractionInput>
-                <commit>
-                    <xsl:value-of select="&quot;true&quot;"/>
-                </commit>
-            </InteractionInput>
-        </pd:inputBindings>
-    </pd:activity>
     <pd:activity name="Map Data">
         <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
         <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
-        <pd:x>1119</pd:x>
-        <pd:y>430</pd:y>
+        <pd:x>802</pd:x>
+        <pd:y>230</pd:y>
         <config>
             <element ref="pfx:HttpProps"/>
         </config>
@@ -178,10 +158,10 @@
                     <xsl:value-of select="&quot;HTTP/1.1 500 Error&quot;"/>
                 </ns1:resp>
                 <ns1:msg>
-                    <xsl:value-of select="$Catch/ns3:BwmqException/msg"/>
+                    <xsl:value-of select="$Catch/ns2:BwmqException/msg"/>
                 </ns1:msg>
                 <ns1:msgcode>
-                    <xsl:value-of select="$Catch/ns3:BwmqException/msgCode"/>
+                    <xsl:value-of select="$Catch/ns2:BwmqException/msgCode"/>
                 </ns1:msgcode>
             </ns1:HttpProps>
         </pd:inputBindings>
@@ -189,8 +169,8 @@
     <pd:activity name="Catch">
         <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
         <pd:resourceType>ae.activities.catch</pd:resourceType>
-        <pd:x>996</pd:x>
-        <pd:y>431</pd:y>
+        <pd:x>812</pd:x>
+        <pd:y>380</pd:y>
         <pd:handler>true</pd:handler>
         <config>
             <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
@@ -205,22 +185,8 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Group</pd:from>
-        <pd:to>IBM MQ SyncPoint Activity</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
         <pd:from>IBM MQ Put Activity</pd:from>
         <pd:to>Group</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>IBM MQ SyncPoint Activity</pd:from>
-        <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -234,6 +200,13 @@
     </pd:transition>
     <pd:transition>
         <pd:from>Map Data</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>

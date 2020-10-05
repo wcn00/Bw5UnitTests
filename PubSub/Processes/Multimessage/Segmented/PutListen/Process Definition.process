@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema">
+    <pd:name>Processes/Multimessage/Segmented/PutListen/Process Definition.process</pd:name>
+    <pd:startName>IBM MQ Listener Start</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="IBM MQ Listener Start">
+        <pd:type>com.tibco.plugin.bwmq.QueueListenerActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.QueueListenerResource</pd:resourceType>
+        <pd:x>147</pd:x>
+        <pd:y>78</pd:y>
+        <config>
+            <version>7.8.0</version>
+            <pollingtimeout>1000</pollingtimeout>
+            <pollinginterval>1000</pollinginterval>
+            <listenerinstances>1</listenerinstances>
+            <contentType>Text</contentType>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <filterEncoding>Text</filterEncoding>
+            <desttype>QUEUE</desttype>
+            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+            <failifquiesce>true</failifquiesce>
+            <enablepolling>false</enablepolling>
+            <dynamic>false</dynamic>
+            <reconnectioninterval>10000</reconnectioninterval>
+            <segmentedMessage>false</segmentedMessage>
+            <clientconfirm>false</clientconfirm>
+            <batchquantity>1</batchquantity>
+            <multiMessage>None</multiMessage>
+            <enablePoisonMsgDetection>false</enablePoisonMsgDetection>
+            <PoisonMsgThreshold>1</PoisonMsgThreshold>
+            <destination>bwmq.segmented.forlistener</destination>
+            <connectionresource>/Resources/centosmq8.mqcon</connectionresource>
+            <completeMessage>false</completeMessage>
+            <getOrdered>false</getOrdered>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1601902272733</pd:targetNamespace>
+    <pd:activity name="Log">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>291</pd:x>
+        <pd:y>70</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat(&quot;Receied string reconstituted from segments of length: &quot;, string-length($IBM-MQ-Listener-Start/InteractionOutput/text))"/>
+                </message>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>IBM MQ Listener Start</pd:from>
+        <pd:to>Log</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Log</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

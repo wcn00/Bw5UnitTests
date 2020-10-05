@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema">
-    <pd:name>Processes/Inquire/DispatchInquire.process</pd:name>
+    <pd:name>Processes/Servicedispatch/DispatchInquire.process</pd:name>
     <pd:startName>HTTP Receiver</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
@@ -236,8 +236,8 @@
     <pd:activity name="Send-HTTP-Response-1-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>747</pd:x>
-        <pd:y>356</pd:y>
+        <pd:x>745</pd:x>
+        <pd:y>369</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -273,8 +273,8 @@
     <pd:activity name="Send-HTTP-Response-1-1-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>727</pd:x>
-        <pd:y>446</pd:y>
+        <pd:x>750</pd:x>
+        <pd:y>455</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -325,7 +325,7 @@
         <pd:x>536</pd:x>
         <pd:y>548</pd:y>
         <config>
-            <processName>/Processes/Multimessage/Segmented/PutGetPooled.process</processName>
+            <processName>/Processes/Multimessage/Segmented/PutGetPooledWithSyncpoint.process</processName>
         </config>
         <pd:inputBindings>
             <ns:HttpProps>
@@ -453,6 +453,195 @@
                     <ns:resp>
                         <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/resp"/>
                     </ns:resp>
+                </xsl:if>
+            </ns:HttpProps>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Send-HTTP-Response-1-1-1-1-1">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>766</pd:x>
+        <pd:y>644</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="concat(&quot;msg: &quot;, $PutGetPooledWithOutSyncpoint/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $PutGetPooledWithOutSyncpoint/ns:HttpProps/ns:msgcode)"/>
+                </asciiContent>
+                <Headers>
+                    <StatusLine>
+                        <xsl:value-of select="$PutGetPooledWithOutSyncpoint/ns:HttpProps/ns:resp"/>
+                    </StatusLine>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="PutGetPooledWithOutSyncpoint">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>523</pd:x>
+        <pd:y>636</pd:y>
+        <config>
+            <processName>/Processes/Multimessage/Segmented/PutGetPooledWithOutSyncpoint.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns:HttpProps>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
+                    <ns:op>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
+                    </ns:op>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
+                    <ns:req>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
+                    </ns:req>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/iter">
+                    <ns:iter>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
+                    </ns:iter>
+                </xsl:if>
+            </ns:HttpProps>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Send-HTTP-Response-1-1-1-1-1-1">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>764</pd:x>
+        <pd:y>741</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="concat(&quot;msg: &quot;, $SendBatch/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $SendBatch/ns:HttpProps/ns:msgcode)"/>
+                </asciiContent>
+                <Headers>
+                    <StatusLine>
+                        <xsl:value-of select="$SendBatch/ns:HttpProps/ns:resp"/>
+                    </StatusLine>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SendBatch">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>537</pd:x>
+        <pd:y>738</pd:y>
+        <config>
+            <processName>/Processes/Perf/SendBatch.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns:HttpProps>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
+                    <ns:op>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
+                    </ns:op>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
+                    <ns:req>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
+                    </ns:req>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/iter">
+                    <ns:iter>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
+                    </ns:iter>
+                </xsl:if>
+            </ns:HttpProps>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Send-HTTP-Response-1-1-1-1-1-1-1">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>766</pd:x>
+        <pd:y>835</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="concat(&quot;msg: &quot;, $SendBatchPooled/ns:HttpProps/ns:msg,&quot; msgcode: &quot;, $SendBatchPooled/ns:HttpProps/ns:msgcode)"/>
+                </asciiContent>
+                <Headers>
+                    <StatusLine>
+                        <xsl:value-of select="$SendBatchPooled/ns:HttpProps/ns:resp"/>
+                    </StatusLine>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SendBatchPooled">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>523</pd:x>
+        <pd:y>834</pd:y>
+        <config>
+            <processName>/Processes/Perf/SendBatchPooled.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns:HttpProps>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/op">
+                    <ns:op>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/op"/>
+                    </ns:op>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/req">
+                    <ns:req>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/req"/>
+                    </ns:req>
+                </xsl:if>
+                <xsl:if test="$HTTP-Receiver/ProcessStarterOutput/parameters/iter">
+                    <ns:iter>
+                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/parameters/iter"/>
+                    </ns:iter>
                 </xsl:if>
             </ns:HttpProps>
         </pd:inputBindings>
@@ -591,6 +780,72 @@
     </pd:transition>
     <pd:transition>
         <pd:from>Send-HTTP-Response-2</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HTTP Receiver</pd:from>
+        <pd:to>PutGetPooledWithOutSyncpoint</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "segmentedpoolednosyncpoint"</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>PutGetPooledWithOutSyncpoint</pd:from>
+        <pd:to>Send-HTTP-Response-1-1-1-1-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Send-HTTP-Response-1-1-1-1-1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HTTP Receiver</pd:from>
+        <pd:to>SendBatch</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "perfsendbatch"</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SendBatch</pd:from>
+        <pd:to>Send-HTTP-Response-1-1-1-1-1-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Send-HTTP-Response-1-1-1-1-1-1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HTTP Receiver</pd:from>
+        <pd:to>SendBatchPooled</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$HTTP-Receiver/ProcessStarterOutput/parameters/op = "perfsendbatchpooled"</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SendBatchPooled</pd:from>
+        <pd:to>Send-HTTP-Response-1-1-1-1-1-1-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Send-HTTP-Response-1-1-1-1-1-1-1</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>

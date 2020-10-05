@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns2="http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType">
     <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
-    <pd:name>Processes/Multimessage/Segmented/PutGetPooled.process</pd:name>
+    <pd:name>Processes/Multimessage/Segmented/PutGetPooledWithSyncpoint.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType ref="pfx:HttpProps"/>
     <pd:startX>88</pd:startX>
@@ -14,12 +14,22 @@
             <pfx:resp>
                 <xsl:value-of select="if ($Map-Data/pfx:HttpProps/pfx:resp) then $Map-Data/pfx:HttpProps/pfx:resp else &quot;HTTP/1.1 200 OK&quot;"/>
             </pfx:resp>
+            <xsl:if test="$Map-Data/pfx:HttpProps/pfx:msg">
+                <pfx:msg>
+                    <xsl:value-of select="$Map-Data/pfx:HttpProps/pfx:msg"/>
+                </pfx:msg>
+            </xsl:if>
+            <xsl:if test="$Map-Data/pfx:HttpProps/pfx:msgcode">
+                <pfx:msgcode>
+                    <xsl:value-of select="$Map-Data/pfx:HttpProps/pfx:msgcode"/>
+                </pfx:msgcode>
+            </xsl:if>
         </pfx:HttpProps>
     </pd:returnBindings>
     <pd:endName>End</pd:endName>
     <pd:endType ref="pfx:HttpProps"/>
-    <pd:endX>918</pd:endX>
-    <pd:endY>152</pd:endY>
+    <pd:endX>809</pd:endX>
+    <pd:endY>119</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1601071403293</pd:targetNamespace>
@@ -64,10 +74,10 @@
     <pd:group name="Group">
         <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
         <pd:resourceType>ae.process.group</pd:resourceType>
-        <pd:x>158</pd:x>
-        <pd:y>232</pd:y>
-        <pd:width>763</pd:width>
-        <pd:height>245</pd:height>
+        <pd:x>267</pd:x>
+        <pd:y>216</pd:y>
+        <pd:width>296</pd:width>
+        <pd:height>212</pd:height>
         <pd:collapsedWidth>57</pd:collapsedWidth>
         <pd:collapsedHeight>70</pd:collapsedHeight>
         <pd:groupVariables/>
@@ -100,8 +110,8 @@
         <pd:activity name="IBM MQ Get Activity">
             <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
             <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
-            <pd:x>537</pd:x>
-            <pd:y>408</pd:y>
+            <pd:x>427</pd:x>
+            <pd:y>331</pd:y>
             <config>
                 <version>7.8.0</version>
                 <contentType>Text</contentType>
@@ -126,11 +136,6 @@
             <pd:inputBindings>
                 <InteractionInput>
                     <mqproperties>
-                        <xsl:if test="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId">
-                            <correlationId>
-                                <xsl:value-of select="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId"/>
-                            </correlationId>
-                        </xsl:if>
                         <waitInterval>
                             <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/MQVars/waitinterval"/>
                         </waitInterval>
@@ -160,8 +165,8 @@
     <pd:activity name="Map Data">
         <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
         <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
-        <pd:x>1106</pd:x>
-        <pd:y>306</pd:y>
+        <pd:x>744</pd:x>
+        <pd:y>231</pd:y>
         <config>
             <element ref="pfx:HttpProps"/>
         </config>
@@ -182,8 +187,8 @@
     <pd:activity name="Catch">
         <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
         <pd:resourceType>ae.activities.catch</pd:resourceType>
-        <pd:x>1085</pd:x>
-        <pd:y>487</pd:y>
+        <pd:x>726</pd:x>
+        <pd:y>390</pd:y>
         <pd:handler>true</pd:handler>
         <config>
             <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
