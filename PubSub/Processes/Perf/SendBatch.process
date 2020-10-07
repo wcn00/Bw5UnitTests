@@ -39,16 +39,17 @@
         <pd:y>16</pd:y>
         <pd:width>366</pd:width>
         <pd:height>286</pd:height>
-        <pd:collapsedWidth>61</pd:collapsedWidth>
-        <pd:collapsedHeight>72</pd:collapsedHeight>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
         <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
         <config>
             <pd:groupType>repeat</pd:groupType>
             <pd:serializable>false</pd:serializable>
             <pd:indexSlot>idx</pd:indexSlot>
             <pd:outSlot>RequestOutput</pd:outSlot>
             <pd:activityOutputName>IBM MQ Put Activity</pd:activityOutputName>
-            <pd:repeatCondition>$idx &gt;= $Start/pfx:HttpProps/pfx:iter</pd:repeatCondition>
+            <pd:repeatCondition>$idx&gt;= $Start/pfx:HttpProps/pfx:iter</pd:repeatCondition>
             <pd:accumulateOutput>true</pd:accumulateOutput>
         </config>
         <pd:inputBindings/>
@@ -125,9 +126,10 @@
         <pd:y>22</pd:y>
         <pd:width>382</pd:width>
         <pd:height>263</pd:height>
-        <pd:collapsedWidth>89</pd:collapsedWidth>
-        <pd:collapsedHeight>72</pd:collapsedHeight>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
         <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
         <config>
             <pd:groupType>repeat</pd:groupType>
             <pd:serializable>false</pd:serializable>
@@ -155,8 +157,8 @@
         <pd:activity name="IBM MQ Get Activity">
             <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
             <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
-            <pd:x>909</pd:x>
-            <pd:y>147</pd:y>
+            <pd:x>914</pd:x>
+            <pd:y>148</pd:y>
             <config>
                 <version>7.8.0</version>
                 <contentType>Text</contentType>
