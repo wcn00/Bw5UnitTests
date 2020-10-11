@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns0:httpSharedResource xmlns:ns0="www.tibco.com/shared/HTTPConnection">
     <config>
-        <Host>%%HTTPVars/host%%</Host>
         <serverType>Tomcat</serverType>
         <HttpConnectionProperties>
             <row>
@@ -40,6 +39,7 @@
                 <PropertyDefaultValue>60000</PropertyDefaultValue>
             </row>
         </HttpConnectionProperties>
-        <Port>%%HTTPVars/port2%%</Port>
+        <Host>%%HTTPVars/host%%</Host>
+        <Port>%%HTTPVars/port8101%%</Port>
     </config>
 </ns0:httpSharedResource>

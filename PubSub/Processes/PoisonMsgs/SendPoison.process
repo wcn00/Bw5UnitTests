@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns2="http://www.tibco.com/pe/EngineTypes" xmlns:ns1="http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions">
+    <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <pd:name>Processes/PoisonMsgs/SendPoison.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <pfx:resp>
+                <xsl:value-of select="$processvar0/response"/>
+            </pfx:resp>
+            <pfx:msg>
+                <xsl:value-of select="$Catch/ns1:BwmqException/msg"/>
+            </pfx:msg>
+            <xsl:if test="$Catch/ns1:BwmqException/msgCode">
+                <pfx:msgcode>
+                    <xsl:value-of select="$Catch/ns1:BwmqException/msgCode"/>
+                </pfx:msgcode>
+            </xsl:if>
+        </pfx:HttpProps>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
+    <pd:endX>1070</pd:endX>
+    <pd:endY>74</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables>
+        <processvar0>
+            <xsd:element name="response" type="xsd:string"/>
+        </processvar0>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1602427779689</pd:targetNamespace>
+    <pd:activity name="IBM MQ Request Reply Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqReqReplyActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqReqReplyActivity</pd:resourceType>
+        <pd:x>437</pd:x>
+        <pd:y>100</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_REQUEST</messagetype>
+            <expiration>0</expiration>
+            <priority>0</priority>
+            <mqcih_enabled>false</mqcih_enabled>
+            <mqiih_enabled>false</mqiih_enabled>
+            <passContext>default</passContext>
+            <replypassoption>None</replypassoption>
+            <replymatchoption>CorrelationId</replymatchoption>
+            <poolacitivity>false</poolacitivity>
+            <connectionresource>/Resources/centosmq8Pooled.mqcon</connectionresource>
+            <destination>BWMQ.REQ</destination>
+            <replytodestination>BWMQ.REPLY</replytodestination>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <mqproperties>
+                    <correlationId>
+                        <xsl:value-of select="tib:string-to-base64($_processContext/ns2:ProcessContext/ProcessId)"/>
+                    </correlationId>
+                    <waitInterval>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/MQVars/waitinterval / 2"/>
+                    </waitInterval>
+                </mqproperties>
+                <text>
+                    <xsl:value-of select="$Start/pfx:HttpProps/pfx:req"/>
+                </text>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="IBM MQ Get Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+        <pd:x>433</pd:x>
+        <pd:y>305</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+            <threadpool>1</threadpool>
+            <closeOptions>none</closeOptions>
+            <waitforever>false</waitforever>
+            <multiMessage>None</multiMessage>
+            <completeMessage>true</completeMessage>
+            <getOrdered>true</getOrdered>
+            <explicitSync>true</explicitSync>
+            <batchquantity>1</batchquantity>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq8Pooled.mqcon</connectionresource>
+            <destination>bwmq.poison</destination>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <mqproperties>
+                    <correlationId>
+                        <xsl:value-of select="tib:string-to-base64($_processContext/ns2:ProcessContext/ProcessId)"/>
+                    </correlationId>
+                    <waitInterval>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/MQVars/waitinterval * 4"/>
+                    </waitInterval>
+                </mqproperties>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>238</pd:x>
+        <pd:y>292</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="AssignSad">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>638</pd:x>
+        <pd:y>88</pd:y>
+        <config>
+            <variableName>processvar0</variableName>
+        </config>
+        <pd:inputBindings>
+            <response>
+                <xsl:value-of select="&quot;HTTP/1.1 500 Error&quot;"/>
+            </response>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="AssignHappy">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>695</pd:x>
+        <pd:y>286</pd:y>
+        <config>
+            <variableName>processvar0</variableName>
+        </config>
+        <pd:inputBindings>
+            <response>
+                <xsl:value-of select="&quot;HTTP/1.1 200 OK&quot;"/>
+            </response>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="AssignInitial">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>283</pd:x>
+        <pd:y>69</pd:y>
+        <config>
+            <variableName>processvar0</variableName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>AssignInitial</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Request Reply Activity</pd:from>
+        <pd:to>AssignSad</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>IBM MQ Get Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Get Activity</pd:from>
+        <pd:to>AssignHappy</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignHappy</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignSad</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignInitial</pd:from>
+        <pd:to>IBM MQ Request Reply Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

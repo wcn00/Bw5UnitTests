@@ -25,5 +25,13 @@
 			<type>Integer</type>
 			<modTime>1601066873354</modTime>
 		</globalVariable>
+		<globalVariable>
+			<name>port8101</name>
+			<value>8101</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1602339170525</modTime>
+		</globalVariable>
 	</globalVariables>
 </repository>

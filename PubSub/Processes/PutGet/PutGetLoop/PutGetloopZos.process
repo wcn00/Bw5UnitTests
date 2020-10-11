@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <pd:name>Processes/PutGet/PutGetLoop/PutGetloopZos.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <xsl:if test="if ($Map-Data/pfx:HttpProps/pfx:resp) then $Map-Data/pfx:HttpProps/pfx:resp else &quot;HTTP/1.1 200 OK&quot;">
+                <pfx:resp>
+                    <xsl:value-of select="if ($Map-Data/pfx:HttpProps/pfx:resp) then $Map-Data/pfx:HttpProps/pfx:resp else &quot;HTTP/1.1 200 OK&quot;"/>
+                </pfx:resp>
+            </xsl:if>
+            <xsl:if test="$Map-Data/pfx:HttpProps/pfx:msg">
+                <pfx:msg>
+                    <xsl:value-of select="$Map-Data/pfx:HttpProps/pfx:msg"/>
+                </pfx:msg>
+            </xsl:if>
+            <xsl:if test="$Map-Data/pfx:HttpProps/pfx:msgcode">
+                <pfx:msgcode>
+                    <xsl:value-of select="$Map-Data/pfx:HttpProps/pfx:msgcode"/>
+                </pfx:msgcode>
+            </xsl:if>
+        </pfx:HttpProps>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
+    <pd:endX>1655</pd:endX>
+    <pd:endY>87</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1602339093286</pd:targetNamespace>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>260</pd:x>
+        <pd:y>1</pd:y>
+        <pd:width>1276</pd:width>
+        <pd:height>169</pd:height>
+        <pd:collapsedWidth>61</pd:collapsedWidth>
+        <pd:collapsedHeight>72</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <config>
+            <pd:groupType>repeat</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>idx</pd:indexSlot>
+            <pd:activityOutputName/>
+            <pd:repeatCondition>$idx &gt;= $Start/pfx:HttpProps/pfx:iter</pd:repeatCondition>
+            <pd:accumulateOutput>false</pd:accumulateOutput>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>IBM MQ Put Activity</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM-MQ-Get-Activity-2</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM MQ Put Activity</pd:from>
+            <pd:to>IBM MQ Get Activity</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM MQ Get Activity</pd:from>
+            <pd:to>IBM-MQ-Put-Activity-1</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM-MQ-Put-Activity-1</pd:from>
+            <pd:to>IBM-MQ-Get-Activity-1</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM-MQ-Get-Activity-1</pd:from>
+            <pd:to>IBM-MQ-Put-Activity-2</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>IBM-MQ-Put-Activity-2</pd:from>
+            <pd:to>IBM-MQ-Get-Activity-2</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="IBM MQ Put Activity">
+            <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+            <pd:x>333</pd:x>
+            <pd:y>76</pd:y>
+            <config>
+                <version>7.7.2</version>
+                <contentType>Binary</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <lastSegment>false</lastSegment>
+                <persistence>Persist as queue def</persistence>
+                <messagetype>MQMT_DATAGRAM</messagetype>
+                <expiration>0</expiration>
+                <priority>0</priority>
+                <reportCoaOptions>None</reportCoaOptions>
+                <reportCodOptions>None</reportCodOptions>
+                <reportExceptionOptions>None</reportExceptionOptions>
+                <reportExpiryOptions>None</reportExpiryOptions>
+                <multiMessage>None</multiMessage>
+                <segmentedMaxSize>0</segmentedMaxSize>
+                <asyncPut>false</asyncPut>
+                <passContext>default</passContext>
+                <clusterloadbalance>false</clusterloadbalance>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <connectionresource>/Resources/ZosCafe.mqcon</connectionresource>
+                <destination>bwmq.req</destination>
+                <gencorrid>true</gencorrid>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <bytes>
+                        <xsl:value-of select="tib:string-to-base64($Start/pfx:HttpProps/pfx:req)"/>
+                    </bytes>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="IBM MQ Get Activity">
+            <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+            <pd:x>538</pd:x>
+            <pd:y>81</pd:y>
+            <config>
+                <version>7.7.2</version>
+                <contentType>Binary</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+                <threadpool>2</threadpool>
+                <closeOptions>none</closeOptions>
+                <waitforever>false</waitforever>
+                <multiMessage>None</multiMessage>
+                <completeMessage>true</completeMessage>
+                <getOrdered>true</getOrdered>
+                <explicitSync>true</explicitSync>
+                <batchquantity>1</batchquantity>
+                <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <connectionresource>/Resources/ZosCafe.mqcon</connectionresource>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <mqproperties>
+                        <xsl:if test="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/destination">
+                            <destination>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/destination"/>
+                            </destination>
+                        </xsl:if>
+                        <xsl:if test="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId">
+                            <correlationId>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity/InteractionOutput/mqproperties/correlationId"/>
+                            </correlationId>
+                        </xsl:if>
+                        <xsl:if test="$Start/pfx:HttpProps/pfx:iter">
+                            <waitInterval>
+                                <xsl:value-of select="$Start/pfx:HttpProps/pfx:iter * 10"/>
+                            </waitInterval>
+                        </xsl:if>
+                    </mqproperties>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="IBM-MQ-Put-Activity-1">
+            <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+            <pd:x>750</pd:x>
+            <pd:y>74</pd:y>
+            <config>
+                <version>7.7.2</version>
+                <contentType>Binary</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <lastSegment>false</lastSegment>
+                <persistence>Persist as queue def</persistence>
+                <messagetype>MQMT_DATAGRAM</messagetype>
+                <expiration>0</expiration>
+                <priority>0</priority>
+                <reportCoaOptions>None</reportCoaOptions>
+                <reportCodOptions>None</reportCodOptions>
+                <reportExceptionOptions>None</reportExceptionOptions>
+                <reportExpiryOptions>None</reportExpiryOptions>
+                <multiMessage>None</multiMessage>
+                <segmentedMaxSize>0</segmentedMaxSize>
+                <asyncPut>false</asyncPut>
+                <passContext>identity</passContext>
+                <clusterloadbalance>false</clusterloadbalance>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <connectionresource>/Resources/ZosCafe.mqcon</connectionresource>
+                <destination>bwmq.req</destination>
+                <gencorrid>true</gencorrid>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <bytes>
+                        <xsl:value-of select="$IBM-MQ-Get-Activity/InteractionOutput/bytes"/>
+                    </bytes>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="IBM-MQ-Get-Activity-1">
+            <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+            <pd:x>962</pd:x>
+            <pd:y>84</pd:y>
+            <config>
+                <version>7.7.2</version>
+                <contentType>Binary</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+                <threadpool>2</threadpool>
+                <closeOptions>none</closeOptions>
+                <waitforever>false</waitforever>
+                <multiMessage>None</multiMessage>
+                <completeMessage>true</completeMessage>
+                <getOrdered>true</getOrdered>
+                <explicitSync>true</explicitSync>
+                <batchquantity>1</batchquantity>
+                <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <connectionresource>/Resources/ZosCafe.mqcon</connectionresource>
+                <destination>bwmq.req</destination>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <mqproperties>
+                        <xsl:if test="$IBM-MQ-Put-Activity-1/InteractionOutput/mqproperties/destination">
+                            <destination>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity-1/InteractionOutput/mqproperties/destination"/>
+                            </destination>
+                        </xsl:if>
+                        <xsl:if test="$IBM-MQ-Put-Activity-1/InteractionOutput/mqproperties/correlationId">
+                            <correlationId>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity-1/InteractionOutput/mqproperties/correlationId"/>
+                            </correlationId>
+                        </xsl:if>
+                        <xsl:if test="$Start/pfx:HttpProps/pfx:iter">
+                            <waitInterval>
+                                <xsl:value-of select="$Start/pfx:HttpProps/pfx:iter * 10"/>
+                            </waitInterval>
+                        </xsl:if>
+                    </mqproperties>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="IBM-MQ-Put-Activity-2">
+            <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+            <pd:x>1184</pd:x>
+            <pd:y>79</pd:y>
+            <config>
+                <version>7.7.2</version>
+                <contentType>Binary</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <lastSegment>false</lastSegment>
+                <persistence>Persist as queue def</persistence>
+                <messagetype>MQMT_DATAGRAM</messagetype>
+                <expiration>0</expiration>
+                <priority>0</priority>
+                <reportCoaOptions>None</reportCoaOptions>
+                <reportCodOptions>None</reportCodOptions>
+                <reportExceptionOptions>None</reportExceptionOptions>
+                <reportExpiryOptions>None</reportExpiryOptions>
+                <multiMessage>None</multiMessage>
+                <segmentedMaxSize>0</segmentedMaxSize>
+                <asyncPut>false</asyncPut>
+                <passContext>all</passContext>
+                <clusterloadbalance>false</clusterloadbalance>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <connectionresource>/Resources/ZosCafe.mqcon</connectionresource>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <mqproperties>
+                        <xsl:if test="$IBM-MQ-Get-Activity-1/InteractionOutput/mqproperties/destination">
+                            <destination>
+                                <xsl:value-of select="$IBM-MQ-Get-Activity-1/InteractionOutput/mqproperties/destination"/>
+                            </destination>
+                        </xsl:if>
+                    </mqproperties>
+                    <bytes>
+                        <xsl:value-of select="$IBM-MQ-Get-Activity-1/InteractionOutput/bytes"/>
+                    </bytes>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="IBM-MQ-Get-Activity-2">
+            <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+            <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+            <pd:x>1409</pd:x>
+            <pd:y>80</pd:y>
+            <config>
+                <version>7.7.2</version>
+                <contentType>Binary</contentType>
+                <desttype>QUEUE</desttype>
+                <dynamic>false</dynamic>
+                <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+                <threadpool>2</threadpool>
+                <closeOptions>none</closeOptions>
+                <waitforever>false</waitforever>
+                <multiMessage>None</multiMessage>
+                <completeMessage>true</completeMessage>
+                <getOrdered>true</getOrdered>
+                <explicitSync>true</explicitSync>
+                <batchquantity>1</batchquantity>
+                <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+                <poolacitivity>false</poolacitivity>
+                <segmentation>None</segmentation>
+                <connectionresource>/Resources/ZosCafe.mqcon</connectionresource>
+            </config>
+            <pd:inputBindings>
+                <InteractionInput>
+                    <mqproperties>
+                        <xsl:if test="$IBM-MQ-Put-Activity-2/InteractionOutput/mqproperties/destination">
+                            <destination>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity-2/InteractionOutput/mqproperties/destination"/>
+                            </destination>
+                        </xsl:if>
+                        <xsl:if test="$IBM-MQ-Put-Activity-2/InteractionOutput/mqproperties/correlationId">
+                            <correlationId>
+                                <xsl:value-of select="$IBM-MQ-Put-Activity-2/InteractionOutput/mqproperties/correlationId"/>
+                            </correlationId>
+                        </xsl:if>
+                        <xsl:if test="$Start/pfx:HttpProps/pfx:iter">
+                            <waitInterval>
+                                <xsl:value-of select="$Start/pfx:HttpProps/pfx:iter * 10"/>
+                            </waitInterval>
+                        </xsl:if>
+                    </mqproperties>
+                </InteractionInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:activity name="Map Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>1446</pd:x>
+        <pd:y>308</pd:y>
+        <config>
+            <element ref="pfx:HttpProps"/>
+        </config>
+        <pd:inputBindings>
+            <ns1:HttpProps xmlns:ns1="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd">
+                <ns1:resp>
+                    <xsl:value-of select="&quot;HTTP/1.1 500 Error&quot;"/>
+                </ns1:resp>
+                <ns1:msg>
+                    <xsl:value-of select="$Catch/ns:BwmqException/msg"/>
+                </ns1:msg>
+                <xsl:if test="$Catch/ns:BwmqException/msgCode">
+                    <ns1:msgcode>
+                        <xsl:value-of select="$Catch/ns:BwmqException/msgCode"/>
+                    </ns1:msgcode>
+                </xsl:if>
+            </ns1:HttpProps>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>1163</pd:x>
+        <pd:y>313</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Map Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map Data</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

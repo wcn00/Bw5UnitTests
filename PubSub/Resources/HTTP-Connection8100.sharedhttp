@@ -40,6 +40,6 @@
             </row>
         </HttpConnectionProperties>
         <Host>%%HTTPVars/host%%</Host>
-        <Port>%%HTTPVars/port%%</Port>
+        <Port>%%HTTPVars/port2%%</Port>
     </config>
 </ns0:httpSharedResource>
