@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>Processes/Multimessage/Batch/ProcessLogical.process</pd:name>
+    <pd:startName>IBM MQ Listener Start</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings>
+        <root/>
+    </pd:returnBindings>
+    <pd:starter name="IBM MQ Listener Start">
+        <pd:type>com.tibco.plugin.bwmq.QueueListenerActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.QueueListenerResource</pd:resourceType>
+        <pd:x>138</pd:x>
+        <pd:y>203</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <pollingtimeout>1000</pollingtimeout>
+            <pollinginterval>1000</pollinginterval>
+            <listenerinstances>1</listenerinstances>
+            <contentType>Text</contentType>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <filterEncoding>Text</filterEncoding>
+            <desttype>QUEUE</desttype>
+            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+            <failifquiesce>true</failifquiesce>
+            <enablepolling>false</enablepolling>
+            <dynamic>false</dynamic>
+            <reconnectioninterval>10000</reconnectioninterval>
+            <segmentedMessage>false</segmentedMessage>
+            <clientconfirm>true</clientconfirm>
+            <batchquantity>1</batchquantity>
+            <multiMessage>BatchGroup</multiMessage>
+            <enablePoisonMsgDetection>false</enablePoisonMsgDetection>
+            <PoisonMsgThreshold>1</PoisonMsgThreshold>
+            <connectionresource>/Resources/centosmq91.mqcon</connectionresource>
+            <destination>bwmq.logical</destination>
+            <completeMessage>true</completeMessage>
+            <getOrdered>true</getOrdered>
+            <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence/>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>905</pd:endX>
+    <pd:endY>249</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables>
+        <Variable0>
+            <xsd:element name="resp" type="xsd:string"/>
+        </Variable0>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1602430721756</pd:targetNamespace>
+    <pd:activity name="IBM MQ Put Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+        <pd:x>432</pd:x>
+        <pd:y>107</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <lastSegment>false</lastSegment>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_DATAGRAM</messagetype>
+            <expiration>0</expiration>
+            <priority>0</priority>
+            <reportCoaOptions>None</reportCoaOptions>
+            <reportCodOptions>None</reportCodOptions>
+            <reportExceptionOptions>None</reportExceptionOptions>
+            <reportExpiryOptions>None</reportExpiryOptions>
+            <multiMessage>None</multiMessage>
+            <segmentedMaxSize>0</segmentedMaxSize>
+            <asyncPut>false</asyncPut>
+            <passContext>all</passContext>
+            <clusterloadbalance>false</clusterloadbalance>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <destination>bwmq.logical.resp</destination>
+            <properties>/Resources/IBM MQ Application Properties.wmqprops</properties>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <mqproperties>
+                    <correlationId>
+                        <xsl:value-of select="$IBM-MQ-Listener-Start/Batch/InteractionOutput[1]/mqproperties/correlationId"/>
+                    </correlationId>
+                </mqproperties>
+                <appProperties>
+                    <xsl:if test="$IBM-MQ-Listener-Start/Batch/InteractionOutput[1]/appProperties/iter">
+                        <iter>
+                            <xsl:value-of select="$IBM-MQ-Listener-Start/Batch/InteractionOutput[1]/appProperties/iter"/>
+                        </iter>
+                    </xsl:if>
+                </appProperties>
+                <text>
+                    <xsl:value-of select="count($IBM-MQ-Listener-Start/Batch/InteractionOutput)"/>
+                </text>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Log">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>451</pd:x>
+        <pd:y>267</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <message>
+                    <xsl:value-of select="count($IBM-MQ-Listener-Start/Batch/InteractionOutput)"/>
+                </message>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Confirm">
+        <pd:type>com.tibco.pe.core.ConfirmActivity</pd:type>
+        <pd:resourceType>activity.confirm</pd:resourceType>
+        <pd:x>738</pd:x>
+        <pd:y>174</pd:y>
+        <config>
+            <ConfirmEvent>IBM MQ Listener Start</ConfirmEvent>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>IBM MQ Listener Start</pd:from>
+        <pd:to>IBM MQ Put Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>count($IBM-MQ-Listener-Start/Batch/InteractionOutput) = $IBM-MQ-Listener-Start/Batch/InteractionOutput/appProperties[1]/iter</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Listener Start</pd:from>
+        <pd:to>Log</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Log</pd:from>
+        <pd:to>Confirm</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Put Activity</pd:from>
+        <pd:to>Confirm</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Confirm</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <pd:name>Processes/Multimessage/Batch/PutBatch10.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
+    <pd:startX>147</pd:startX>
+    <pd:startY>112</pd:startY>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <pfx:resp>
+                <xsl:value-of select="$Variable0/resp"/>
+            </pfx:resp>
+        </pfx:HttpProps>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
+    <pd:endX>1013</pd:endX>
+    <pd:endY>104</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables>
+        <Variable0>
+            <xsd:element name="resp" type="xsd:string"/>
+        </Variable0>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1602430325391</pd:targetNamespace>
+    <pd:activity name="PutBatchToTLSQMgr">
+        <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+        <pd:x>387</pd:x>
+        <pd:y>152</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <lastSegment>false</lastSegment>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_DATAGRAM</messagetype>
+            <expiration>0</expiration>
+            <priority>0</priority>
+            <reportCoaOptions>None</reportCoaOptions>
+            <reportCodOptions>None</reportCodOptions>
+            <reportExceptionOptions>None</reportExceptionOptions>
+            <reportExpiryOptions>None</reportExpiryOptions>
+            <multiMessage>Batch</multiMessage>
+            <segmentedMaxSize>0</segmentedMaxSize>
+            <asyncPut>false</asyncPut>
+            <passContext>default</passContext>
+            <clusterloadbalance>false</clusterloadbalance>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <destination>bwmq.batch</destination>
+            <gencorrid>true</gencorrid>
+        </config>
+        <pd:inputBindings>
+            <Batch>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+                <InteractionInput>
+                    <text>
+                        <xsl:value-of select="tib:pad(&quot;mar had a little lamb   &quot;,1024,'z')"/>
+                    </text>
+                </InteractionInput>
+            </Batch>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="IBM MQ Get Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
+        <pd:x>600</pd:x>
+        <pd:y>137</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
+            <threadpool>1</threadpool>
+            <closeOptions>none</closeOptions>
+            <waitforever>false</waitforever>
+            <multiMessage>None</multiMessage>
+            <completeMessage>true</completeMessage>
+            <getOrdered>true</getOrdered>
+            <explicitSync>true</explicitSync>
+            <batchquantity>1</batchquantity>
+            <gmopropctl>PROPERTIES_AS_Q_DEF</gmopropctl>
+            <poolacitivity>false</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq91-tls.mqcon</connectionresource>
+            <destination>bwmq.batch.response</destination>
+            <gettimeout/>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <mqproperties>
+                    <waitInterval>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/MQVars/waitinterval"/>
+                    </waitInterval>
+                </mqproperties>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="AssignHappy">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>866</pd:x>
+        <pd:y>80</pd:y>
+        <config>
+            <variableName>Variable0</variableName>
+        </config>
+        <pd:inputBindings>
+            <resp>
+                <xsl:value-of select="&quot;HTTP/1.1 200 OK&quot;"/>
+            </resp>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="AssignSad">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>945</pd:x>
+        <pd:y>255</pd:y>
+        <config>
+            <variableName>Variable0</variableName>
+        </config>
+        <pd:inputBindings>
+            <resp>
+                <xsl:value-of select="&quot;HTTP/1.1 500 Error&quot;"/>
+            </resp>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>PutBatchToTLSQMgr</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>PutBatchToTLSQMgr</pd:from>
+        <pd:to>IBM MQ Get Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Get Activity</pd:from>
+        <pd:to>AssignHappy</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$IBM-MQ-Get-Activity/InteractionOutput/text = 10</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Get Activity</pd:from>
+        <pd:to>AssignSad</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignSad</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignHappy</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

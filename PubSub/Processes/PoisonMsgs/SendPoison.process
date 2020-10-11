@@ -4,7 +4,7 @@
     <pd:name>Processes/PoisonMsgs/SendPoison.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType ref="pfx:HttpProps"/>
-    <pd:startX>150</pd:startX>
+    <pd:startX>151</pd:startX>
     <pd:startY>64</pd:startY>
     <pd:returnBindings>
         <pfx:HttpProps>
@@ -62,7 +62,7 @@
                         <xsl:value-of select="tib:string-to-base64($_processContext/ns2:ProcessContext/ProcessId)"/>
                     </correlationId>
                     <waitInterval>
-                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/MQVars/waitinterval / 2"/>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/MQVars/waitinterval"/>
                     </waitInterval>
                 </mqproperties>
                 <text>
@@ -148,23 +148,6 @@
             </response>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="AssignInitial">
-        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
-        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
-        <pd:x>283</pd:x>
-        <pd:y>69</pd:y>
-        <config>
-            <variableName>processvar0</variableName>
-        </config>
-        <pd:inputBindings/>
-    </pd:activity>
-    <pd:transition>
-        <pd:from>Start</pd:from>
-        <pd:to>AssignInitial</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
     <pd:transition>
         <pd:from>IBM MQ Request Reply Activity</pd:from>
         <pd:to>AssignSad</pd:to>
@@ -201,7 +184,7 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>AssignInitial</pd:from>
+        <pd:from>Start</pd:from>
         <pd:to>IBM MQ Request Reply Activity</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
