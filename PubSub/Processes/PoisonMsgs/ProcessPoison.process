@@ -21,7 +21,7 @@
             <desttype>QUEUE</desttype>
             <accesstype>MQOO_INPUT_AS_Q_DEF</accesstype>
             <failifquiesce>true</failifquiesce>
-            <enablepolling>true</enablepolling>
+            <enablepolling>false</enablepolling>
             <dynamic>false</dynamic>
             <reconnectioninterval>10000</reconnectioninterval>
             <segmentedMessage>false</segmentedMessage>
@@ -73,11 +73,9 @@
         <pd:inputBindings>
             <InteractionInput>
                 <mqproperties>
-                    <xsl:if test="$IBM-MQ-Listener-Start/InteractionOutput/mqproperties/replyToQmgrName">
-                        <destination>
-                            <xsl:value-of select="concat($IBM-MQ-Listener-Start/InteractionOutput/mqproperties/replyToQmgrName, &quot;blarg&quot;)"/>
-                        </destination>
-                    </xsl:if>
+                    <destination>
+                        <xsl:value-of select="$IBM-MQ-Listener-Start/InteractionOutput/mqproperties/replyToQmgrName"/>
+                    </destination>
                     <xsl:if test="$IBM-MQ-Listener-Start/InteractionOutput/mqproperties/correlationId">
                         <correlationId>
                             <xsl:value-of select="$IBM-MQ-Listener-Start/InteractionOutput/mqproperties/correlationId"/>

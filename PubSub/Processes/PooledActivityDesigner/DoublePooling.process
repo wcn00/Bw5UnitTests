@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:import namespace="http://www.tibco.com/schemas/PubSub/Schema/Schema.xsd" schemaLocation="/Schema/RestRequest.xsd"/>
+    <pd:name>Processes/PooledActivityDesigner/DoublePooling.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:HttpProps"/>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <pfx:HttpProps>
+            <pfx:resp>
+                <xsl:value-of select="&quot;HTTP/1.1 200 OK&quot;"/>
+            </pfx:resp>
+        </pfx:HttpProps>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:HttpProps"/>
+    <pd:endX>654</pd:endX>
+    <pd:endY>68</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables>
+        <Variable0>
+            <xsd:element name="resp" type="xsd:string"/>
+        </Variable0>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1602765445471</pd:targetNamespace>
+    <pd:activity name="IBM MQ Put Activity">
+        <pd:type>com.tibco.plugin.bwmq.MqPutActivity</pd:type>
+        <pd:resourceType>plugin.bwmq.MqPutActivity</pd:resourceType>
+        <pd:x>309</pd:x>
+        <pd:y>75</pd:y>
+        <config>
+            <version>7.7.2</version>
+            <contentType>Text</contentType>
+            <desttype>QUEUE</desttype>
+            <dynamic>false</dynamic>
+            <lastSegment>false</lastSegment>
+            <persistence>Persist as queue def</persistence>
+            <messagetype>MQMT_DATAGRAM</messagetype>
+            <expiration>0</expiration>
+            <priority>0</priority>
+            <reportCoaOptions>None</reportCoaOptions>
+            <reportCodOptions>None</reportCodOptions>
+            <reportExceptionOptions>None</reportExceptionOptions>
+            <reportExpiryOptions>None</reportExpiryOptions>
+            <multiMessage>None</multiMessage>
+            <segmentedMaxSize>0</segmentedMaxSize>
+            <asyncPut>false</asyncPut>
+            <passContext>all</passContext>
+            <clusterloadbalance>false</clusterloadbalance>
+            <poolacitivity>true</poolacitivity>
+            <segmentation>None</segmentation>
+            <connectionresource>/Resources/centosmq8Pooled.mqcon</connectionresource>
+            <destination>BWMQ.REQUEST</destination>
+        </config>
+        <pd:inputBindings>
+            <InteractionInput>
+                <text>
+                    <xsl:value-of select="&quot;sadf&quot;"/>
+                </text>
+            </InteractionInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch-1">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>282</pd:x>
+        <pd:y>205</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="AssignGood">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>517</pd:x>
+        <pd:y>211</pd:y>
+        <config>
+            <variableName>Variable0</variableName>
+        </config>
+        <pd:inputBindings>
+            <resp>
+                <xsl:value-of select="&quot;HTTP/1.1 200 OK&quot;"/>
+            </resp>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="AssignBad">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>506</pd:x>
+        <pd:y>60</pd:y>
+        <config>
+            <variableName>Variable0</variableName>
+        </config>
+        <pd:inputBindings>
+            <resp>
+                <xsl:value-of select="&quot;HTTP/1.1 500 Error&quot;"/>
+            </resp>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>IBM MQ Put Activity</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>IBM MQ Put Activity</pd:from>
+        <pd:to>AssignBad</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignBad</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch-1</pd:from>
+        <pd:to>AssignGood</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AssignGood</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

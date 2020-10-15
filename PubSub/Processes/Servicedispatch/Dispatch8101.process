@@ -94,8 +94,8 @@
     <pd:activity name="PutGetloopZosPooled">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>508</pd:x>
-        <pd:y>224</pd:y>
+        <pd:x>529</pd:x>
+        <pd:y>239</pd:y>
         <config>
             <processName>/Processes/PutGet/PutGetLoop/PutGetloopZosPooled.process</processName>
         </config>
@@ -376,8 +376,8 @@
     <pd:activity name="PutGetloopLocalActPooled">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>483</pd:x>
-        <pd:y>487</pd:y>
+        <pd:x>521</pd:x>
+        <pd:y>480</pd:y>
         <config>
             <processName>/Processes/PutGet/PutGetLooplocallinux/PutGetloopLocalActPooled.process</processName>
         </config>
@@ -460,8 +460,8 @@
     <pd:activity name="SendPoison">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>525</pd:x>
-        <pd:y>860</pd:y>
+        <pd:x>441</pd:x>
+        <pd:y>861</pd:y>
         <config>
             <processName>/Processes/PoisonMsgs/SendPoison.process</processName>
         </config>

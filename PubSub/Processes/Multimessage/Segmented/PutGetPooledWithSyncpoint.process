@@ -110,8 +110,8 @@
         <pd:activity name="IBM MQ Get Activity">
             <pd:type>com.tibco.plugin.bwmq.MqGetActivity</pd:type>
             <pd:resourceType>plugin.bwmq.MqGetActivity</pd:resourceType>
-            <pd:x>427</pd:x>
-            <pd:y>331</pd:y>
+            <pd:x>415</pd:x>
+            <pd:y>340</pd:y>
             <config>
                 <version>7.8.0</version>
                 <contentType>Text</contentType>
@@ -187,8 +187,8 @@
     <pd:activity name="Catch">
         <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
         <pd:resourceType>ae.activities.catch</pd:resourceType>
-        <pd:x>726</pd:x>
-        <pd:y>390</pd:y>
+        <pd:x>748</pd:x>
+        <pd:y>391</pd:y>
         <pd:handler>true</pd:handler>
         <config>
             <fault>localname=BwmqException namespace=http://schemas.tibco.com/bw/plugins/bwmq/5.0/bwmqExceptions</fault>
